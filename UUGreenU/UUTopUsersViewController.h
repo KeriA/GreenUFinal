@@ -8,8 +8,9 @@
 
 #import <UIKit/UIKit.h>
 #import "UUTopUsersView.h"
+#import "UUShowTopUsersViewController.h"
 
-@interface UUTopUsersViewController : UIViewController
+@interface UUTopUsersViewController : UIViewController<UITableViewDataSource, UITableViewDelegate>
 {
     UUModel* _model;
     UUApplicationConstants* _appConstants;

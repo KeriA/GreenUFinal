@@ -9,14 +9,18 @@
 #import <UIKit/UIKit.h>
 #import "UULoginView.h"
 #import "UUCreateUserViewController.h"
+#include "UUMainView.h"
 
 
-@interface UULoginViewController : UIViewController<UULoginViewDelegate, UITextFieldDelegate, UUParticipantLoginDataReceivedDelegate>
+@interface UULoginViewController : UIViewController<UULoginViewDelegate, UITextFieldDelegate, UUModelForLoginScreenDelegate>
 {
     UUModel* _model;
     UUApplicationConstants* _appConstants;
+    
 }
 
 - (id)initWithModel:(UUModel*)model andAppConstants:(UUApplicationConstants *)appConstants;
+
+
 
 @end

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "UUTeamsView.h"
 
-@interface UUTeamsViewController : UIViewController
+@interface UUTeamsViewController : UIViewController<UUTeamsViewDelegate, UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate, UUModelForNewTeamDelegate>
 {
     UUModel* _model;
     UUApplicationConstants* _appConstants;

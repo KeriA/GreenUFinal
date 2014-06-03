@@ -14,5 +14,6 @@
 }
 
 - (id)initWithAppConstants:(UUApplicationConstants*)appConstants;
+-(void) setTableViewDelegates:(id)viewController;
 
 @end

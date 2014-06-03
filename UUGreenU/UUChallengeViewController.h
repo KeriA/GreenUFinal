@@ -8,15 +8,17 @@
 
 #import <UIKit/UIKit.h>
 #import "UUChallengeView.h"
+#import "UUChallengeTabViewController.h"
 
-@interface UUChallengeViewController : UIViewController<UUChallengeViewDelegate>
+
+@interface UUChallengeViewController : UIViewController<UUChallengeViewDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 {
     UUModel* _model;
     UUApplicationConstants* _appConstants;
+    UUChallengeTabViewController* _challengeTabViewController;
 }
 
-- (id)initWithModel:(UUModel*)model andAppConstants:(UUApplicationConstants *)appConstants;
-
+- (id)initWithModel:(UUModel*)model andAppConstants:(UUApplicationConstants *)appConstants andTopicsArrayLocation: (int) topicsArrayLocation;
 
 
 @end

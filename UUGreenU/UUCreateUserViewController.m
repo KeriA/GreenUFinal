@@ -28,6 +28,7 @@
     NSString* _userEmail;
     NSString* _userPassword;
 }
+
 /***
  *
  *      Constructor:  create a weak reference to the model
@@ -45,7 +46,7 @@
         
         
         //set self as the delegate for register participant responses
-        [_model setRegisterParticipantDataReceivedDelegate:self];
+        [_model setModelforRegisterParticipantScreenDelegate:self];
         
     }
     
@@ -139,16 +140,10 @@
                 // SVProgressHUD is created as a singleton (i.e. it doesn't need to be explicitly allocated and instantiated; you directly call [SVProgressHUD <method>]).
                 [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeGradient];
                 
-                
                 // remove any error messages
                 [[self getView] updateErrorMessage:@""];
-                // create data dictionary and send it to the model
-                //NSLog(@"PASSWORD, EMAIL, and DISPLAY NAME ALL GOOD\n"); // for testing
-                NSArray* objects = [NSArray arrayWithObjects:_userName, _userEmail, _userPassword, nil];
-                NSArray* keys    = [NSArray arrayWithObjects:@"displayName", @"email", @"password", nil];
-                NSMutableDictionary* loginDictionary = [NSMutableDictionary dictionaryWithObjects:objects forKeys:keys];
                 
-                [_model sendMessageToServer:registerParticipant withDataDictionary:loginDictionary];
+                [_model registerNewParticipantWithEmail:_userEmail andPassword:_userPassword andUserName:_userName];
                 
             }
             else // password is not ok
@@ -342,37 +337,17 @@
  **********************************************************************************************************/
 -(void) registerParticipantServerDataReceived:(int)responseCase
 {
-    
     [SVProgressHUD dismiss];
     
+    //if we get here, register participant was NOT successful
     switch (responseCase)
     {
-        case 1000: //sucessful register
-        {
-            //store the user's display name and password
-            [_model storeUserName:_userName];
-            [_model storeEmail:_userEmail andPassword:_userPassword];
-            
-            //clear the error messages
-            [[self getView] updateErrorMessage:@""];
-            
-            UUMainViewController* mainViewController = [[UUMainViewController alloc] initWithModel:_model andAppConstants:_appConstants];
-            
-            
-            //This method will replace the whole view controller stack inside the navigation controller.
-            //The "old" controllers get released. The stack array begins with the root controller and its
-            //last element is the topmost view controller.
-            [self.navigationController setViewControllers: [NSArray arrayWithObject: mainViewController]
-                                                 animated: YES];
-            break;
-        }
         case 1001:  // invalid email format
         {
             [[self getView] updateErrorMessage:invalidEmailString];
             //set the focus to the email field
             UITextField* emailTextField = (UITextField *)[self.view viewWithTag:emailTFTag];
             [emailTextField becomeFirstResponder];
-            
             
             break;
         }
@@ -383,9 +358,7 @@
             UITextField* passwordTextField = (UITextField *)[self.view viewWithTag:passwordTFTag];
             [passwordTextField becomeFirstResponder];
             
-            
             break;
-            
         }
         case 1003: // invalid username format
         {
@@ -394,9 +367,7 @@
             UITextField* passwordTextField = (UITextField *)[self.view viewWithTag:displayNameTFTag];
             [passwordTextField becomeFirstResponder];
             
-            
             break;
-            
         }
         case 1004: //email already exists
         {
@@ -406,7 +377,6 @@
             [emailTextField becomeFirstResponder];
             
             break;
-            
         }
         default: //general server error
         {
@@ -416,16 +386,42 @@
             [displayTextField becomeFirstResponder];
             
             break;
-            
         }
-            
             
     }//end switch
     
-    
 }//end registerParticipantServerDataRecieved
 
-
+- (void) startupDataReceived:(int)responseCase
+{
+    [SVProgressHUD dismiss];
+    
+    switch (responseCase)
+    {
+        case SUCCESS:
+        {
+            // launch the main view
+            //This method will replace the whole view controller stack inside the navigation controller.
+            //The "old" controllers get released. The stack array begins with the root controller and its
+            //last element is the topmost view controller.
+            UUMainViewController* _mainViewController = [[UUMainViewController alloc] initWithModel:_model andAppConstants:_appConstants];
+            [self.navigationController setViewControllers: [NSArray arrayWithObject: _mainViewController] animated: YES];
+            
+            break;
+        }
+        default:  //NETWORKERROR
+        {
+            NSString* alertMessage = @"Server Unavailable.  Please check your connection or try again later.";
+            
+            //show the alert message
+            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"" message:alertMessage delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+            
+            break;
+        }
+    }//end switch
+    
+}//end startupDataReceived
 
 /**********************************************************************************************************
  *

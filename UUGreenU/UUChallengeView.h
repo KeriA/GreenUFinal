@@ -24,10 +24,19 @@
 
 // delegate should be a weak reference
 @property (readwrite, nonatomic) id challengeViewDelegate;
-
+//@property (readwrite, nonatomic) id<UIPickerViewDataSource> pickerDataSource;
+//@property (readwrite, nonatomic) id<UIPickerViewDelegate> pickerDelegate;
 
 - (id)initWithAppConstants:(UUApplicationConstants*)appConstants;
 - (void) setCurrentMonth: (int) month;
 - (void) setTopicString:(NSString*)topicString;
+
+- (void) setPickerDataSource:(id<UIPickerViewDataSource>)pickerDataSource;
+- (void) setPickerDelegate:(id<UIPickerViewDelegate>)pickerDelegate;
+
+- (void) showPickerView;
+- (void) hidePickerView;
+
+
 
 @end

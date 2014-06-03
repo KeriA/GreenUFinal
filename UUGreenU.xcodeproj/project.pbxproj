@@ -7,6 +7,43 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CA0B09FA193668DD00A9F57F /* UUChallengeTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0B09F9193668DD00A9F57F /* UUChallengeTabViewController.m */; };
+		CA0B09FD1936692700A9F57F /* UUChallengeTabView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0B09FC1936692700A9F57F /* UUChallengeTabView.m */; };
+		CA0B09FF19366BA600A9F57F /* button-challenge-challenges_NOTSELECTED.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0B09FE19366BA600A9F57F /* button-challenge-challenges_NOTSELECTED.png */; };
+		CA0B0A0119366BAC00A9F57F /* button-challenge-challenges_SELECTED.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0B0A0019366BAC00A9F57F /* button-challenge-challenges_SELECTED.png */; };
+		CA0B0A0319366BB200A9F57F /* button-challenge-information_NOTSELECTED.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0B0A0219366BB200A9F57F /* button-challenge-information_NOTSELECTED.png */; };
+		CA0B0A0519366BB800A9F57F /* button-challenge-information_SELECTED.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0B0A0419366BB800A9F57F /* button-challenge-information_SELECTED.png */; };
+		CA0FB314192D12FF00B97CEC /* mainmenu_green.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB313192D12FE00B97CEC /* mainmenu_green.png */; };
+		CA0FB316192D130300B97CEC /* mainmenu_orange.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB315192D130300B97CEC /* mainmenu_orange.png */; };
+		CA0FB318192D130800B97CEC /* mainmenu_yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB317192D130800B97CEC /* mainmenu_yellow.png */; };
+		CA0FB31A192D130E00B97CEC /* mainmenu_red.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB319192D130E00B97CEC /* mainmenu_red.png */; };
+		CA0FB31C192D131300B97CEC /* mainmenu_blue.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB31B192D131300B97CEC /* mainmenu_blue.png */; };
+		CA0FB326192D184500B97CEC /* ChallengeNum1Image.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB325192D184500B97CEC /* ChallengeNum1Image.png */; };
+		CA0FB328192D191300B97CEC /* ChallengeNum2Image.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB327192D191300B97CEC /* ChallengeNum2Image.png */; };
+		CA0FB32A192D191A00B97CEC /* ChallengeNum3Image.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB329192D191A00B97CEC /* ChallengeNum3Image.png */; };
+		CA0FB332192E3EA100B97CEC /* standardCalendarButton.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB331192E3EA100B97CEC /* standardCalendarButton.png */; };
+		CA0FB334192E3EA600B97CEC /* selectedCalendarButton.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB333192E3EA600B97CEC /* selectedCalendarButton.png */; };
+		CA0FB336192E3EAB00B97CEC /* disabledCalendarButton.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB335192E3EAB00B97CEC /* disabledCalendarButton.png */; };
+		CA0FB338192E3EB000B97CEC /* userCompletedButton.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB337192E3EB000B97CEC /* userCompletedButton.png */; };
+		CA0FB33A193390F000B97CEC /* logo_verizon-white.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB339193390F000B97CEC /* logo_verizon-white.png */; };
+		CA0FB33C193390F600B97CEC /* logo_SLCseal-white.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB33B193390F600B97CEC /* logo_SLCseal-white.png */; };
+		CA0FB33E1933918800B97CEC /* logo_SRC_white.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB33D1933918800B97CEC /* logo_SRC_white.png */; };
+		CA0FB35E1933F37900B97CEC /* UUShowTopUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FB35D1933F37900B97CEC /* UUShowTopUsersViewController.m */; };
+		CA0FB3611933F3B000B97CEC /* UUShowTopUsersView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA0FB3601933F3B000B97CEC /* UUShowTopUsersView.m */; };
+		CA0FB36B1934FAE500B97CEC /* inverted_triangle.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB36A1934FAE500B97CEC /* inverted_triangle.png */; };
+		CA0FB36D1935284500B97CEC /* topusers-green.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB36C1935284500B97CEC /* topusers-green.png */; };
+		CA0FB371193528D100B97CEC /* logo_SRCwhitetextredU.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB370193528D100B97CEC /* logo_SRCwhitetextredU.png */; };
+		CA0FB37319352EBF00B97CEC /* SimpleSeal_whitew-transp.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB37219352EBF00B97CEC /* SimpleSeal_whitew-transp.png */; };
+		CA0FB3751935381E00B97CEC /* topusers-yellow.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB3741935381E00B97CEC /* topusers-yellow.png */; };
+		CA0FB3771935389800B97CEC /* button-topusers-individual_SELECTED.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB3761935389800B97CEC /* button-topusers-individual_SELECTED.png */; };
+		CA0FB379193538A100B97CEC /* button-topusers-individual_NOTSELECTED.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB378193538A100B97CEC /* button-topusers-individual_NOTSELECTED.png */; };
+		CA0FB37B193538A700B97CEC /* button-topusers-team_SELECTED.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB37A193538A700B97CEC /* button-topusers-team_SELECTED.png */; };
+		CA0FB37D193538AE00B97CEC /* button-topusers-team_NOTSELECTED.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB37C193538AE00B97CEC /* button-topusers-team_NOTSELECTED.png */; };
+		CA0FB37F19357DB100B97CEC /* whiteline620pxwide.png in Resources */ = {isa = PBXBuildFile; fileRef = CA0FB37E19357DB100B97CEC /* whiteline620pxwide.png */; };
+		CA16ECF718ECB916006A0F22 /* UUSplashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CA16ECF618ECB916006A0F22 /* UUSplashViewController.m */; };
+		CA16ECFB18ECB99C006A0F22 /* UUSplashView.m in Sources */ = {isa = PBXBuildFile; fileRef = CA16ECFA18ECB99C006A0F22 /* UUSplashView.m */; };
+		CA16ECFD18ECBDCE006A0F22 /* greenUSplash320x568.png in Resources */ = {isa = PBXBuildFile; fileRef = CA16ECFC18ECBDCE006A0F22 /* greenUSplash320x568.png */; };
+		CA16ECFF18ECBDD4006A0F22 /* greenUSplash320x480.png in Resources */ = {isa = PBXBuildFile; fileRef = CA16ECFE18ECBDD4006A0F22 /* greenUSplash320x480.png */; };
 		CA4AEC7818AA885B0074494F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA4AEC7718AA885B0074494F /* Foundation.framework */; };
 		CA4AEC7A18AA885B0074494F /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA4AEC7918AA885B0074494F /* CoreGraphics.framework */; };
 		CA4AEC7C18AA885B0074494F /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA4AEC7B18AA885B0074494F /* UIKit.framework */; };
@@ -31,6 +68,7 @@
 		CA4AECCF18AAE1F20074494F /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CA4AECCC18AAE1F20074494F /* SVProgressHUD.bundle */; };
 		CA4AECD018AAE1F20074494F /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = CA4AECCE18AAE1F20074494F /* SVProgressHUD.m */; };
 		CA4AECD218AAE22B0074494F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA4AECD118AAE22B0074494F /* QuartzCore.framework */; };
+		CABB80EB193C2B3F00C047E6 /* UUSesson.m in Sources */ = {isa = PBXBuildFile; fileRef = CABB80EA193C2B3F00C047E6 /* UUSesson.m */; };
 		CACAA75C18D115FA0016714B /* 01January-greennewyear.png in Resources */ = {isa = PBXBuildFile; fileRef = CACAA75B18D115FA0016714B /* 01January-greennewyear.png */; };
 		CACAA75E18D116020016714B /* 02February-reusablethinking.png in Resources */ = {isa = PBXBuildFile; fileRef = CACAA75D18D116020016714B /* 02February-reusablethinking.png */; };
 		CACAA76018D116090016714B /* 03March-greenproducts.png in Resources */ = {isa = PBXBuildFile; fileRef = CACAA75F18D116090016714B /* 03March-greenproducts.png */; };
@@ -48,6 +86,14 @@
 		CACAA77918D116610016714B /* challengewtext.png in Resources */ = {isa = PBXBuildFile; fileRef = CACAA77818D116610016714B /* challengewtext.png */; };
 		CACAA77B18D116660016714B /* topuserswtext.png in Resources */ = {isa = PBXBuildFile; fileRef = CACAA77A18D116660016714B /* topuserswtext.png */; };
 		CACAA77D18D1166B0016714B /* teamswtext.png in Resources */ = {isa = PBXBuildFile; fileRef = CACAA77C18D1166B0016714B /* teamswtext.png */; };
+		CAD36F9719154BE70060BB66 /* UserInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = CAD36F9619154BE70060BB66 /* UserInfo.plist */; };
+		CAD8F55B1925300100767ADE /* UUSpecificChallengeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CAD8F55A1925300100767ADE /* UUSpecificChallengeViewController.m */; };
+		CAD8F55E1925301800767ADE /* UUSpecificChallengeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CAD8F55D1925301800767ADE /* UUSpecificChallengeView.m */; };
+		CAD8F5611925409E00767ADE /* UUCalendarView.m in Sources */ = {isa = PBXBuildFile; fileRef = CAD8F5601925409E00767ADE /* UUCalendarView.m */; };
+		CAD8F563192541DF00767ADE /* calendarIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = CAD8F562192541DF00767ADE /* calendarIcon.png */; };
+		CAD8F5651925452200767ADE /* checkbox_full.ico in Resources */ = {isa = PBXBuildFile; fileRef = CAD8F5641925452200767ADE /* checkbox_full.ico */; };
+		CAD8F5671925453900767ADE /* checkbox_empty.ico in Resources */ = {isa = PBXBuildFile; fileRef = CAD8F5661925453900767ADE /* checkbox_empty.ico */; };
+		CAD8F5691925486100767ADE /* TwitterIconSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = CAD8F5681925486100767ADE /* TwitterIconSmall.png */; };
 		CAFA0E7B18AB095300D2871F /* UUChallengeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CAFA0E7A18AB095300D2871F /* UUChallengeViewController.m */; };
 		CAFA0E7E18AB096900D2871F /* UUChallengeView.m in Sources */ = {isa = PBXBuildFile; fileRef = CAFA0E7D18AB096900D2871F /* UUChallengeView.m */; };
 		CAFA0E8118AB099400D2871F /* UUTopUsersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CAFA0E8018AB099400D2871F /* UUTopUsersViewController.m */; };
@@ -83,6 +129,49 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CA0B09F8193668DD00A9F57F /* UUChallengeTabViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUChallengeTabViewController.h; sourceTree = "<group>"; };
+		CA0B09F9193668DD00A9F57F /* UUChallengeTabViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUChallengeTabViewController.m; sourceTree = "<group>"; };
+		CA0B09FB1936692700A9F57F /* UUChallengeTabView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUChallengeTabView.h; sourceTree = "<group>"; };
+		CA0B09FC1936692700A9F57F /* UUChallengeTabView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUChallengeTabView.m; sourceTree = "<group>"; };
+		CA0B09FE19366BA600A9F57F /* button-challenge-challenges_NOTSELECTED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-challenge-challenges_NOTSELECTED.png"; sourceTree = "<group>"; };
+		CA0B0A0019366BAC00A9F57F /* button-challenge-challenges_SELECTED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-challenge-challenges_SELECTED.png"; sourceTree = "<group>"; };
+		CA0B0A0219366BB200A9F57F /* button-challenge-information_NOTSELECTED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-challenge-information_NOTSELECTED.png"; sourceTree = "<group>"; };
+		CA0B0A0419366BB800A9F57F /* button-challenge-information_SELECTED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-challenge-information_SELECTED.png"; sourceTree = "<group>"; };
+		CA0FB313192D12FE00B97CEC /* mainmenu_green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mainmenu_green.png; sourceTree = "<group>"; };
+		CA0FB315192D130300B97CEC /* mainmenu_orange.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mainmenu_orange.png; sourceTree = "<group>"; };
+		CA0FB317192D130800B97CEC /* mainmenu_yellow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mainmenu_yellow.png; sourceTree = "<group>"; };
+		CA0FB319192D130E00B97CEC /* mainmenu_red.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mainmenu_red.png; sourceTree = "<group>"; };
+		CA0FB31B192D131300B97CEC /* mainmenu_blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = mainmenu_blue.png; sourceTree = "<group>"; };
+		CA0FB325192D184500B97CEC /* ChallengeNum1Image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ChallengeNum1Image.png; sourceTree = "<group>"; };
+		CA0FB327192D191300B97CEC /* ChallengeNum2Image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ChallengeNum2Image.png; sourceTree = "<group>"; };
+		CA0FB329192D191A00B97CEC /* ChallengeNum3Image.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = ChallengeNum3Image.png; sourceTree = "<group>"; };
+		CA0FB331192E3EA100B97CEC /* standardCalendarButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = standardCalendarButton.png; sourceTree = "<group>"; };
+		CA0FB333192E3EA600B97CEC /* selectedCalendarButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = selectedCalendarButton.png; sourceTree = "<group>"; };
+		CA0FB335192E3EAB00B97CEC /* disabledCalendarButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = disabledCalendarButton.png; sourceTree = "<group>"; };
+		CA0FB337192E3EB000B97CEC /* userCompletedButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = userCompletedButton.png; sourceTree = "<group>"; };
+		CA0FB339193390F000B97CEC /* logo_verizon-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo_verizon-white.png"; sourceTree = "<group>"; };
+		CA0FB33B193390F600B97CEC /* logo_SLCseal-white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "logo_SLCseal-white.png"; sourceTree = "<group>"; };
+		CA0FB33D1933918800B97CEC /* logo_SRC_white.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_SRC_white.png; sourceTree = "<group>"; };
+		CA0FB35C1933F37900B97CEC /* UUShowTopUsersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUShowTopUsersViewController.h; sourceTree = "<group>"; };
+		CA0FB35D1933F37900B97CEC /* UUShowTopUsersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUShowTopUsersViewController.m; sourceTree = "<group>"; };
+		CA0FB35F1933F3B000B97CEC /* UUShowTopUsersView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUShowTopUsersView.h; sourceTree = "<group>"; };
+		CA0FB3601933F3B000B97CEC /* UUShowTopUsersView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUShowTopUsersView.m; sourceTree = "<group>"; };
+		CA0FB36A1934FAE500B97CEC /* inverted_triangle.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = inverted_triangle.png; sourceTree = "<group>"; };
+		CA0FB36C1935284500B97CEC /* topusers-green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "topusers-green.png"; sourceTree = "<group>"; };
+		CA0FB370193528D100B97CEC /* logo_SRCwhitetextredU.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = logo_SRCwhitetextredU.png; sourceTree = "<group>"; };
+		CA0FB37219352EBF00B97CEC /* SimpleSeal_whitew-transp.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SimpleSeal_whitew-transp.png"; sourceTree = "<group>"; };
+		CA0FB3741935381E00B97CEC /* topusers-yellow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "topusers-yellow.png"; sourceTree = "<group>"; };
+		CA0FB3761935389800B97CEC /* button-topusers-individual_SELECTED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-topusers-individual_SELECTED.png"; sourceTree = "<group>"; };
+		CA0FB378193538A100B97CEC /* button-topusers-individual_NOTSELECTED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-topusers-individual_NOTSELECTED.png"; sourceTree = "<group>"; };
+		CA0FB37A193538A700B97CEC /* button-topusers-team_SELECTED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-topusers-team_SELECTED.png"; sourceTree = "<group>"; };
+		CA0FB37C193538AE00B97CEC /* button-topusers-team_NOTSELECTED.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button-topusers-team_NOTSELECTED.png"; sourceTree = "<group>"; };
+		CA0FB37E19357DB100B97CEC /* whiteline620pxwide.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = whiteline620pxwide.png; sourceTree = "<group>"; };
+		CA16ECF518ECB916006A0F22 /* UUSplashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUSplashViewController.h; sourceTree = "<group>"; };
+		CA16ECF618ECB916006A0F22 /* UUSplashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUSplashViewController.m; sourceTree = "<group>"; };
+		CA16ECF918ECB99C006A0F22 /* UUSplashView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUSplashView.h; sourceTree = "<group>"; };
+		CA16ECFA18ECB99C006A0F22 /* UUSplashView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUSplashView.m; sourceTree = "<group>"; };
+		CA16ECFC18ECBDCE006A0F22 /* greenUSplash320x568.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greenUSplash320x568.png; sourceTree = "<group>"; };
+		CA16ECFE18ECBDD4006A0F22 /* greenUSplash320x480.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = greenUSplash320x480.png; sourceTree = "<group>"; };
 		CA4AEC7418AA885B0074494F /* UUGreenU.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = UUGreenU.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA4AEC7718AA885B0074494F /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		CA4AEC7918AA885B0074494F /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -121,6 +210,9 @@
 		CA4AECCD18AAE1F20074494F /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
 		CA4AECCE18AAE1F20074494F /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
 		CA4AECD118AAE22B0074494F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		CABB80E8193C204200C047E6 /* NSStrinAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSStrinAdditions.h; sourceTree = "<group>"; };
+		CABB80E9193C2B3F00C047E6 /* UUSesson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUSesson.h; sourceTree = "<group>"; };
+		CABB80EA193C2B3F00C047E6 /* UUSesson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUSesson.m; sourceTree = "<group>"; };
 		CACAA75B18D115FA0016714B /* 01January-greennewyear.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "01January-greennewyear.png"; sourceTree = "<group>"; };
 		CACAA75D18D116020016714B /* 02February-reusablethinking.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "02February-reusablethinking.png"; sourceTree = "<group>"; };
 		CACAA75F18D116090016714B /* 03March-greenproducts.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "03March-greenproducts.png"; sourceTree = "<group>"; };
@@ -138,6 +230,17 @@
 		CACAA77818D116610016714B /* challengewtext.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = challengewtext.png; sourceTree = "<group>"; };
 		CACAA77A18D116660016714B /* topuserswtext.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topuserswtext.png; sourceTree = "<group>"; };
 		CACAA77C18D1166B0016714B /* teamswtext.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = teamswtext.png; sourceTree = "<group>"; };
+		CAD36F9619154BE70060BB66 /* UserInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = UserInfo.plist; sourceTree = "<group>"; };
+		CAD8F5591925300100767ADE /* UUSpecificChallengeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUSpecificChallengeViewController.h; sourceTree = "<group>"; };
+		CAD8F55A1925300100767ADE /* UUSpecificChallengeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUSpecificChallengeViewController.m; sourceTree = "<group>"; };
+		CAD8F55C1925301800767ADE /* UUSpecificChallengeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUSpecificChallengeView.h; sourceTree = "<group>"; };
+		CAD8F55D1925301800767ADE /* UUSpecificChallengeView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUSpecificChallengeView.m; sourceTree = "<group>"; };
+		CAD8F55F1925409E00767ADE /* UUCalendarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUCalendarView.h; sourceTree = "<group>"; };
+		CAD8F5601925409E00767ADE /* UUCalendarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUCalendarView.m; sourceTree = "<group>"; };
+		CAD8F562192541DF00767ADE /* calendarIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendarIcon.png; sourceTree = "<group>"; };
+		CAD8F5641925452200767ADE /* checkbox_full.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = checkbox_full.ico; sourceTree = "<group>"; };
+		CAD8F5661925453900767ADE /* checkbox_empty.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = checkbox_empty.ico; sourceTree = "<group>"; };
+		CAD8F5681925486100767ADE /* TwitterIconSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = TwitterIconSmall.png; sourceTree = "<group>"; };
 		CAFA0E7918AB095300D2871F /* UUChallengeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUChallengeViewController.h; sourceTree = "<group>"; };
 		CAFA0E7A18AB095300D2871F /* UUChallengeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUChallengeViewController.m; sourceTree = "<group>"; };
 		CAFA0E7C18AB096900D2871F /* UUChallengeView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUChallengeView.h; sourceTree = "<group>"; };
@@ -199,6 +302,71 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		CA0FB3401933ADCA00B97CEC /* TeamsImages */ = {
+			isa = PBXGroup;
+			children = (
+				CA0FB36A1934FAE500B97CEC /* inverted_triangle.png */,
+				CA0FB36C1935284500B97CEC /* topusers-green.png */,
+				CA0FB3741935381E00B97CEC /* topusers-yellow.png */,
+				CA0FB37E19357DB100B97CEC /* whiteline620pxwide.png */,
+				CA0FB3761935389800B97CEC /* button-topusers-individual_SELECTED.png */,
+				CA0FB378193538A100B97CEC /* button-topusers-individual_NOTSELECTED.png */,
+				CA0FB37A193538A700B97CEC /* button-topusers-team_SELECTED.png */,
+				CA0FB37C193538AE00B97CEC /* button-topusers-team_NOTSELECTED.png */,
+			);
+			name = TeamsImages;
+			sourceTree = "<group>";
+		};
+		CA0FB3671934D43700B97CEC /* ProfileImages */ = {
+			isa = PBXGroup;
+			children = (
+				CAFA0EC618C55F9300D2871F /* genericUserImage.png */,
+				CAFA0EC818C55F9A00D2871F /* genericUserImageSelected.png */,
+			);
+			name = ProfileImages;
+			sourceTree = "<group>";
+		};
+		CA16ECEF18ECB4E5006A0F22 /* AboutImages */ = {
+			isa = PBXGroup;
+			children = (
+				CA0FB370193528D100B97CEC /* logo_SRCwhitetextredU.png */,
+				CA0FB339193390F000B97CEC /* logo_verizon-white.png */,
+				CA0FB33B193390F600B97CEC /* logo_SLCseal-white.png */,
+				CA0FB37219352EBF00B97CEC /* SimpleSeal_whitew-transp.png */,
+				CA0FB33D1933918800B97CEC /* logo_SRC_white.png */,
+			);
+			name = AboutImages;
+			sourceTree = "<group>";
+		};
+		CA16ECF018ECB5FF006A0F22 /* StartupAndLogoImages */ = {
+			isa = PBXGroup;
+			children = (
+				CAFA0EAF18ABED6E00D2871F /* logo_greenu_final.png */,
+				CA4AECA918AAB47C0074494F /* background320x480.png */,
+				CA4AECAB18AAB4830074494F /* background320x568.png */,
+				CA16ECFC18ECBDCE006A0F22 /* greenUSplash320x568.png */,
+				CA16ECFE18ECBDD4006A0F22 /* greenUSplash320x480.png */,
+				CAFA0EB518ABEDF200D2871F /* FacebookIconSmall.png */,
+				CAFA0EBE18AC17BF00D2871F /* fbLargeIcon.png */,
+				CAFA0EC218AC1A7A00D2871F /* fbLargeIconPressed.png */,
+				CAD8F5681925486100767ADE /* TwitterIconSmall.png */,
+				CAFA0EC018AC17E700D2871F /* twitterLargeIcon.png */,
+				CAFA0EC418AC1B4800D2871F /* twitterLargeIconPressed.png */,
+			);
+			name = StartupAndLogoImages;
+			sourceTree = "<group>";
+		};
+		CA16ECF818ECB922006A0F22 /* SplashView */ = {
+			isa = PBXGroup;
+			children = (
+				CA16ECF518ECB916006A0F22 /* UUSplashViewController.h */,
+				CA16ECF618ECB916006A0F22 /* UUSplashViewController.m */,
+				CA16ECF918ECB99C006A0F22 /* UUSplashView.h */,
+				CA16ECFA18ECB99C006A0F22 /* UUSplashView.m */,
+			);
+			name = SplashView;
+			sourceTree = "<group>";
+		};
 		CA4AEC6B18AA885B0074494F = {
 			isa = PBXGroup;
 			children = (
@@ -252,6 +420,7 @@
 				CA4AEC8018AA885B0074494F /* InfoPlist.strings */,
 				CA4AEC8318AA885B0074494F /* main.m */,
 				CA4AEC8518AA885B0074494F /* UUGreenU-Prefix.pch */,
+				CAD36F9619154BE70060BB66 /* UserInfo.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -277,20 +446,14 @@
 		CA4AECA618AA8ADD0074494F /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				CA16ECF018ECB5FF006A0F22 /* StartupAndLogoImages */,
 				CACAA77318D1163D0016714B /* MainMenuImages */,
+				CA0FB3671934D43700B97CEC /* ProfileImages */,
 				CACAA75A18D115CC0016714B /* MonthChallengeImages */,
-				CA4AECAB18AAB4830074494F /* background320x568.png */,
-				CA4AECA918AAB47C0074494F /* background320x480.png */,
-				CAFA0EAF18ABED6E00D2871F /* logo_greenu_final.png */,
-				CAFA0EB118ABEDB200D2871F /* grayButton.png */,
+				CA0FB3401933ADCA00B97CEC /* TeamsImages */,
+				CA16ECEF18ECB4E5006A0F22 /* AboutImages */,
 				CAFA0EB318ABEDD300D2871F /* blueButton.png */,
-				CAFA0EB518ABEDF200D2871F /* FacebookIconSmall.png */,
-				CAFA0EBE18AC17BF00D2871F /* fbLargeIcon.png */,
-				CAFA0EC218AC1A7A00D2871F /* fbLargeIconPressed.png */,
-				CAFA0EC018AC17E700D2871F /* twitterLargeIcon.png */,
-				CAFA0EC418AC1B4800D2871F /* twitterLargeIconPressed.png */,
-				CAFA0EC618C55F9300D2871F /* genericUserImage.png */,
-				CAFA0EC818C55F9A00D2871F /* genericUserImageSelected.png */,
+				CAFA0EB118ABEDB200D2871F /* grayButton.png */,
 			);
 			name = Images;
 			path = UUGreenU;
@@ -302,8 +465,11 @@
 				CA4AECAF18AAB8600074494F /* UUNetworkConstants.h */,
 				CA4AECB018AAB98A0074494F /* UUModel.h */,
 				CA4AECB118AAB98A0074494F /* UUModel.m */,
+				CABB80E9193C2B3F00C047E6 /* UUSesson.h */,
+				CABB80EA193C2B3F00C047E6 /* UUSesson.m */,
 				CA4AECB318AAB99F0074494F /* UUApplicationConstants.h */,
 				CA4AECB418AAB99F0074494F /* UUApplicationConstants.m */,
+				CABB80E8193C204200C047E6 /* NSStrinAdditions.h */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -311,6 +477,7 @@
 		CA4AECA818AA8B130074494F /* ViewsAndControllers */ = {
 			isa = PBXGroup;
 			children = (
+				CA16ECF818ECB922006A0F22 /* SplashView */,
 				CA4AECC318AAD1AB0074494F /* NavigationController */,
 				CA4AECAE18AAB7E00074494F /* Login */,
 				CAFA0EB718ABFA3900D2871F /* CreateUser */,
@@ -380,6 +547,16 @@
 		CACAA75A18D115CC0016714B /* MonthChallengeImages */ = {
 			isa = PBXGroup;
 			children = (
+				CA0FB325192D184500B97CEC /* ChallengeNum1Image.png */,
+				CA0FB327192D191300B97CEC /* ChallengeNum2Image.png */,
+				CA0FB329192D191A00B97CEC /* ChallengeNum3Image.png */,
+				CA0B09FE19366BA600A9F57F /* button-challenge-challenges_NOTSELECTED.png */,
+				CA0B0A0019366BAC00A9F57F /* button-challenge-challenges_SELECTED.png */,
+				CA0B0A0219366BB200A9F57F /* button-challenge-information_NOTSELECTED.png */,
+				CA0B0A0419366BB800A9F57F /* button-challenge-information_SELECTED.png */,
+				CAD8F5661925453900767ADE /* checkbox_empty.ico */,
+				CAD8F5641925452200767ADE /* checkbox_full.ico */,
+				CAD8F562192541DF00767ADE /* calendarIcon.png */,
 				CACAA75B18D115FA0016714B /* 01January-greennewyear.png */,
 				CACAA75D18D116020016714B /* 02February-reusablethinking.png */,
 				CACAA75F18D116090016714B /* 03March-greenproducts.png */,
@@ -392,6 +569,10 @@
 				CACAA76D18D1162E0016714B /* 10October-FoodforThought.png */,
 				CACAA76F18D116330016714B /* 11November-RecycleThat.png */,
 				CACAA77118D116380016714B /* 12December-WinterizeYourHome.png */,
+				CA0FB331192E3EA100B97CEC /* standardCalendarButton.png */,
+				CA0FB333192E3EA600B97CEC /* selectedCalendarButton.png */,
+				CA0FB335192E3EAB00B97CEC /* disabledCalendarButton.png */,
+				CA0FB337192E3EB000B97CEC /* userCompletedButton.png */,
 			);
 			name = MonthChallengeImages;
 			sourceTree = "<group>";
@@ -399,6 +580,11 @@
 		CACAA77318D1163D0016714B /* MainMenuImages */ = {
 			isa = PBXGroup;
 			children = (
+				CA0FB31B192D131300B97CEC /* mainmenu_blue.png */,
+				CA0FB319192D130E00B97CEC /* mainmenu_red.png */,
+				CA0FB317192D130800B97CEC /* mainmenu_yellow.png */,
+				CA0FB315192D130300B97CEC /* mainmenu_orange.png */,
+				CA0FB313192D12FE00B97CEC /* mainmenu_green.png */,
 				CACAA77418D116510016714B /* aboutwtext.png */,
 				CACAA77618D116550016714B /* profilewtext.png */,
 				CACAA77818D116610016714B /* challengewtext.png */,
@@ -415,6 +601,16 @@
 				CAFA0E7A18AB095300D2871F /* UUChallengeViewController.m */,
 				CAFA0E7C18AB096900D2871F /* UUChallengeView.h */,
 				CAFA0E7D18AB096900D2871F /* UUChallengeView.m */,
+				CA0B09F8193668DD00A9F57F /* UUChallengeTabViewController.h */,
+				CA0B09F9193668DD00A9F57F /* UUChallengeTabViewController.m */,
+				CA0B09FB1936692700A9F57F /* UUChallengeTabView.h */,
+				CA0B09FC1936692700A9F57F /* UUChallengeTabView.m */,
+				CAD8F5591925300100767ADE /* UUSpecificChallengeViewController.h */,
+				CAD8F55A1925300100767ADE /* UUSpecificChallengeViewController.m */,
+				CAD8F55C1925301800767ADE /* UUSpecificChallengeView.h */,
+				CAD8F55D1925301800767ADE /* UUSpecificChallengeView.m */,
+				CAD8F55F1925409E00767ADE /* UUCalendarView.h */,
+				CAD8F5601925409E00767ADE /* UUCalendarView.m */,
 			);
 			name = Challenges;
 			sourceTree = "<group>";
@@ -426,6 +622,10 @@
 				CAFA0E8018AB099400D2871F /* UUTopUsersViewController.m */,
 				CAFA0E8218AB09A900D2871F /* UUTopUsersView.h */,
 				CAFA0E8318AB09A900D2871F /* UUTopUsersView.m */,
+				CA0FB35C1933F37900B97CEC /* UUShowTopUsersViewController.h */,
+				CA0FB35D1933F37900B97CEC /* UUShowTopUsersViewController.m */,
+				CA0FB35F1933F3B000B97CEC /* UUShowTopUsersView.h */,
+				CA0FB3601933F3B000B97CEC /* UUShowTopUsersView.m */,
 			);
 			name = TopUsers;
 			sourceTree = "<group>";
@@ -540,37 +740,73 @@
 			buildActionMask = 2147483647;
 			files = (
 				CAFA0EC718C55F9300D2871F /* genericUserImage.png in Resources */,
+				CA0FB32A192D191A00B97CEC /* ChallengeNum3Image.png in Resources */,
+				CA0FB328192D191300B97CEC /* ChallengeNum2Image.png in Resources */,
+				CA0FB326192D184500B97CEC /* ChallengeNum1Image.png in Resources */,
+				CAD8F563192541DF00767ADE /* calendarIcon.png in Resources */,
 				CACAA75C18D115FA0016714B /* 01January-greennewyear.png in Resources */,
+				CA0FB33C193390F600B97CEC /* logo_SLCseal-white.png in Resources */,
+				CA0FB336192E3EAB00B97CEC /* disabledCalendarButton.png in Resources */,
+				CA0FB3771935389800B97CEC /* button-topusers-individual_SELECTED.png in Resources */,
 				CACAA77918D116610016714B /* challengewtext.png in Resources */,
+				CA0B0A0319366BB200A9F57F /* button-challenge-information_NOTSELECTED.png in Resources */,
 				CACAA76418D116150016714B /* 05May-water.png in Resources */,
+				CA0FB338192E3EB000B97CEC /* userCompletedButton.png in Resources */,
 				CA4AECAC18AAB4830074494F /* background320x568.png in Resources */,
 				CACAA77218D116380016714B /* 12December-WinterizeYourHome.png in Resources */,
+				CA0FB37319352EBF00B97CEC /* SimpleSeal_whitew-transp.png in Resources */,
 				CA4AECCF18AAE1F20074494F /* SVProgressHUD.bundle in Resources */,
 				CA4AECAA18AAB47C0074494F /* background320x480.png in Resources */,
 				CAFA0EB018ABED6E00D2871F /* logo_greenu_final.png in Resources */,
+				CA0FB316192D130300B97CEC /* mainmenu_orange.png in Resources */,
 				CACAA76618D116190016714B /* 06June-SummerPowerdown.png in Resources */,
+				CA0B09FF19366BA600A9F57F /* button-challenge-challenges_NOTSELECTED.png in Resources */,
 				CACAA76C18D116290016714B /* 09September-IdleFree.png in Resources */,
 				CACAA76218D1160F0016714B /* 04April-EnjoytheTrees.png in Resources */,
 				CACAA77B18D116660016714B /* topuserswtext.png in Resources */,
+				CA0FB371193528D100B97CEC /* logo_SRCwhitetextredU.png in Resources */,
+				CA0FB31A192D130E00B97CEC /* mainmenu_red.png in Resources */,
 				CACAA76018D116090016714B /* 03March-greenproducts.png in Resources */,
+				CA0FB37B193538A700B97CEC /* button-topusers-team_SELECTED.png in Resources */,
 				CAFA0EC118AC17E700D2871F /* twitterLargeIcon.png in Resources */,
 				CAFA0EC918C55F9A00D2871F /* genericUserImageSelected.png in Resources */,
 				CAFA0EC518AC1B4800D2871F /* twitterLargeIconPressed.png in Resources */,
 				CA4AEC8218AA885B0074494F /* InfoPlist.strings in Resources */,
+				CA0FB36B1934FAE500B97CEC /* inverted_triangle.png in Resources */,
+				CA16ECFF18ECBDD4006A0F22 /* greenUSplash320x480.png in Resources */,
+				CA0FB36D1935284500B97CEC /* topusers-green.png in Resources */,
+				CA0FB379193538A100B97CEC /* button-topusers-individual_NOTSELECTED.png in Resources */,
+				CA0FB318192D130800B97CEC /* mainmenu_yellow.png in Resources */,
+				CAD36F9719154BE70060BB66 /* UserInfo.plist in Resources */,
 				CAFA0EB418ABEDD300D2871F /* blueButton.png in Resources */,
 				CACAA77018D116330016714B /* 11November-RecycleThat.png in Resources */,
 				CAFA0EBF18AC17BF00D2871F /* fbLargeIcon.png in Resources */,
 				CACAA75E18D116020016714B /* 02February-reusablethinking.png in Resources */,
+				CA0B0A0519366BB800A9F57F /* button-challenge-information_SELECTED.png in Resources */,
 				CACAA76E18D1162E0016714B /* 10October-FoodforThought.png in Resources */,
 				CACAA77D18D1166B0016714B /* teamswtext.png in Resources */,
 				CACAA76818D1161F0016714B /* 07July-AirQuality.png in Resources */,
+				CA0FB37D193538AE00B97CEC /* button-topusers-team_NOTSELECTED.png in Resources */,
+				CA0FB31C192D131300B97CEC /* mainmenu_blue.png in Resources */,
+				CAD8F5691925486100767ADE /* TwitterIconSmall.png in Resources */,
 				CAFA0EB618ABEDF200D2871F /* FacebookIconSmall.png in Resources */,
+				CA0FB33A193390F000B97CEC /* logo_verizon-white.png in Resources */,
+				CA0B0A0119366BAC00A9F57F /* button-challenge-challenges_SELECTED.png in Resources */,
+				CA0FB332192E3EA100B97CEC /* standardCalendarButton.png in Resources */,
+				CA0FB334192E3EA600B97CEC /* selectedCalendarButton.png in Resources */,
+				CA16ECFD18ECBDCE006A0F22 /* greenUSplash320x568.png in Resources */,
 				CACAA76A18D116240016714B /* 08August-GreenCommunities.png in Resources */,
 				CACAA77718D116550016714B /* profilewtext.png in Resources */,
 				CACAA77518D116510016714B /* aboutwtext.png in Resources */,
+				CA0FB37F19357DB100B97CEC /* whiteline620pxwide.png in Resources */,
 				CAFA0EB218ABEDB200D2871F /* grayButton.png in Resources */,
+				CAD8F5651925452200767ADE /* checkbox_full.ico in Resources */,
+				CA0FB3751935381E00B97CEC /* topusers-yellow.png in Resources */,
 				CA4AEC8A18AA885B0074494F /* Images.xcassets in Resources */,
 				CAFA0EC318AC1A7A00D2871F /* fbLargeIconPressed.png in Resources */,
+				CA0FB33E1933918800B97CEC /* logo_SRC_white.png in Resources */,
+				CAD8F5671925453900767ADE /* checkbox_empty.ico in Resources */,
+				CA0FB314192D12FF00B97CEC /* mainmenu_green.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -591,15 +827,22 @@
 			files = (
 				CAFA0E7E18AB096900D2871F /* UUChallengeView.m in Sources */,
 				CAFA0E8418AB09A900D2871F /* UUTopUsersView.m in Sources */,
+				CAD8F55E1925301800767ADE /* UUSpecificChallengeView.m in Sources */,
 				CA4AECB918AABD390074494F /* UULoginViewController.m in Sources */,
 				CA4AECC218AABD840074494F /* UUMainView.m in Sources */,
 				CAFA0EBD18ABFB5200D2871F /* UUCreateUserView.m in Sources */,
 				CA4AECC618AAD1DA0074494F /* UUNavigationController.m in Sources */,
 				CA4AEC8818AA885B0074494F /* UUAppDelegate.m in Sources */,
+				CA0B09FD1936692700A9F57F /* UUChallengeTabView.m in Sources */,
+				CA0FB35E1933F37900B97CEC /* UUShowTopUsersViewController.m in Sources */,
+				CABB80EB193C2B3F00C047E6 /* UUSesson.m in Sources */,
 				CAFA0E9C18AB0A5700D2871F /* UUProfileView.m in Sources */,
 				CAFA0E7B18AB095300D2871F /* UUChallengeViewController.m in Sources */,
+				CA0FB3611933F3B000B97CEC /* UUShowTopUsersView.m in Sources */,
+				CA16ECFB18ECB99C006A0F22 /* UUSplashView.m in Sources */,
 				CAFA0E8D18AB09EB00D2871F /* UUAboutViewController.m in Sources */,
 				CAFA0E8A18AB09D600D2871F /* UUTeamsView.m in Sources */,
+				CA0B09FA193668DD00A9F57F /* UUChallengeTabViewController.m in Sources */,
 				CA4AECBC18AABD4D0074494F /* UULoginView.m in Sources */,
 				CAFA0E9018AB09FC00D2871F /* UUAboutView.m in Sources */,
 				CAFA0E8718AB09C300D2871F /* UUTeamsViewController.m in Sources */,
@@ -607,10 +850,13 @@
 				CA4AEC8418AA885B0074494F /* main.m in Sources */,
 				CA4AECD018AAE1F20074494F /* SVProgressHUD.m in Sources */,
 				CA4AECB518AAB99F0074494F /* UUApplicationConstants.m in Sources */,
+				CA16ECF718ECB916006A0F22 /* UUSplashViewController.m in Sources */,
 				CAFA0E8118AB099400D2871F /* UUTopUsersViewController.m in Sources */,
 				CAFA0EBA18ABFB3C00D2871F /* UUCreateUserViewController.m in Sources */,
+				CAD8F55B1925300100767ADE /* UUSpecificChallengeViewController.m in Sources */,
 				CAFA0E9918AB0A4300D2871F /* UUProfileViewController.m in Sources */,
 				CA4AECB218AAB98A0074494F /* UUModel.m in Sources */,
+				CAD8F5611925409E00767ADE /* UUCalendarView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

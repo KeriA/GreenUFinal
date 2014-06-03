@@ -12,7 +12,7 @@
 
 @interface UUMainViewController ()
 {
-    int numberOfCells;
+    int _numberOfCells;
 }
 
 @end
@@ -30,6 +30,7 @@
     self = [super init];
     if (self)
     {
+        
         // Custom initialization
         
         //fill in the data model to use
@@ -41,6 +42,8 @@
         
         // this removes the space for the header at the top of the table
         self.edgesForExtendedLayout = UIRectEdgeNone;
+        
+        
         
     }
     return self;
@@ -64,7 +67,7 @@
     //UIViewController has a title property that will be displayed by the
     //NavigationController. So when pushing a new UIViewController onto the
     //navigation stack set the title of that UIViewController
-    self.title = @"GreenU";
+    self.title = @"";
 }
 
 /******************************************************************************************************
@@ -99,6 +102,14 @@
     NSLog(@"change user button was pressed"); //for testing
     _loginViewController = [[UULoginViewController alloc]initWithModel:_model andAppConstants:_appConstants];
     [[self navigationController] pushViewController:_loginViewController animated:TRUE];
+    
+    //should it be this instead?
+    // launch the login view
+    //This method will replace the whole view controller stack inside the navigation controller.
+    //The "old" controllers get released. The stack array begins with the root controller and its
+    //last element is the topmost view controller.
+    // _loginViewController = [[UULoginViewController alloc]initWithModel:_model andAppConstants:_appConstants];
+    // [self.navigationController setViewControllers: [NSArray arrayWithObject: _loginViewController] animated: YES];
 }
 
 /******************************************************************************************************
@@ -120,7 +131,7 @@
     {
  
         case 0: // Challenges
-            _challengeViewController = [[UUChallengeViewController alloc]initWithModel:_model andAppConstants:_appConstants];
+            _challengeViewController = [[UUChallengeViewController alloc]initWithModel:_model andAppConstants:_appConstants andTopicsArrayLocation:CURRENTMONTHLOCATION];
             [[self navigationController] pushViewController:_challengeViewController animated:TRUE];
             break;
         case 1: // Top Users
@@ -161,19 +172,7 @@
     
 }
 
- /*
 
-- (CGFloat) tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{
-    return 0.0;
-    
-}
-
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    return [[UIView alloc]initWithFrame:CGRectZero];
-}// custom view for header. will be adjusted to default or specified header
-*/
 
 
 /******************************************************************************************************
@@ -220,55 +219,74 @@
     
 	static NSString *CellIdentifier = @"Cell";
 	UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    //UUMainTableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+
 	if (cell == nil)
 	{
 		// Create the cell
-        //cell = [[UUMainTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
 
         [cell textLabel].backgroundColor = [UIColor clearColor];
+        [cell textLabel].font = [_appConstants getBoldFontWithSize:22.0];
  		
 		// Create a background image view.
 		cell.backgroundView = [[UIImageView alloc] init];
 		cell.selectedBackgroundView = [[UIImageView alloc] init];
         cell.backgroundColor = [UIColor clearColor];
+           
 	}//end cell == nil
+    
     NSInteger row = [indexPath row];
     
     //use the appropriate background image
 	UIImage *rowBackground;
 	UIImage *selectionBackground;
+    NSString* cellText;
     
 
     if (row == 0) //Challenges
 	{
-        rowBackground = [UIImage imageNamed:@"challengewtext.png"];
-		selectionBackground = [UIImage imageNamed:@"challengewtext.png"];
+        rowBackground = [_appConstants getMainMenuBackground:RED];
+        selectionBackground = [_appConstants getMainMenuBackground:RED];
+        cellText = @"  Challenge";  //spaces move the text over a bit
+        //rowBackground = [UIImage imageNamed:@"challengewtext.png"];
+		//selectionBackground = [UIImage imageNamed:@"challengewtext.png"];
 	}
     else if (row == 1) // Top Users
     {
-        rowBackground = [UIImage imageNamed:@"topuserswtext.png"];
-		selectionBackground = [UIImage imageNamed:@"topuserswtext.png"];
+        //rowBackground = [UIImage imageNamed:@"topuserswtext.png"];
+		//selectionBackground = [UIImage imageNamed:@"topuserswtext.png"];
+        rowBackground = [_appConstants getMainMenuBackground:GREEN];
+        selectionBackground = [_appConstants getMainMenuBackground:GREEN];
+        cellText = @"  Top Users";  //spaces move the text over a bit
     }
     else if (row == 2) //Teams
     {
-        rowBackground = [UIImage imageNamed:@"teamswtext.png"];
-		selectionBackground = [UIImage imageNamed:@"teamswtext.png"];
+        //rowBackground = [UIImage imageNamed:@"teamswtext.png"];
+		//selectionBackground = [UIImage imageNamed:@"teamswtext.png"];
+        rowBackground = [_appConstants getMainMenuBackground:YELLOW];
+        selectionBackground = [_appConstants getMainMenuBackground:YELLOW];
+        cellText = @"  Teams";  //spaces move the text over a bit
     }
     else if (row == 3) //Profile
     {
         rowBackground = [UIImage imageNamed:@"profilewtext.png"];
 		selectionBackground = [UIImage imageNamed:@"profilewtext.png"];
+        rowBackground = [_appConstants getMainMenuBackground:ORANGE];
+        selectionBackground = [_appConstants getMainMenuBackground:ORANGE];
+
+        cellText = @"  Profile";  //spaces move the text over a bit
     }
     else{ // About GreenU
         rowBackground = [UIImage imageNamed:@"aboutwtext.png"];
         selectionBackground = [UIImage imageNamed:@"aboutwtext.png"];
-        
+        rowBackground = [_appConstants getMainMenuBackground:BLUE];
+        selectionBackground = [_appConstants getMainMenuBackground:BLUE];
+        cellText = @"  About GreenU";  //spaces move the text over a bit
     }
     
 	((UIImageView *)cell.backgroundView).image = rowBackground;
 	((UIImageView *)cell.selectedBackgroundView).image = selectionBackground;
+    [cell textLabel].text = cellText;
     
    
 	return cell;

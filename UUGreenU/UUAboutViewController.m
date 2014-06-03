@@ -50,7 +50,7 @@
     //UIViewController has a title property that will be displayed by the
     //NavigationController. So when pushing a new UIViewController onto the
     //navigation stack set the title of that UIViewController
-    self.title = @"About";
+    self.title = @"GreenU";
 }
 
 /******************************************************************************************************

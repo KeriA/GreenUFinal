@@ -31,11 +31,17 @@
 #define getUserProfile 3
 #define forgotPassword 4
 #define getAllTeams 5
-#define getTeamsByType 6
+#define getTeamsByCategory 6
 #define requestNewTeam 7
 #define getCurrentMonthTopic 8
-#define getPreviousMonthTopic 9 
-#define getChallengesForTheTopic 10
+#define getPastMonthTopics 9
+#define getChallengesForTopic 10
+#define getUserPointsForChallenge 11
+#define setUserPointsForChallenge 12
+#define getTeamPointAndRank 13
+#define getParticipantPointAndRank 14
+#define getTopTenTeams 15
+#define getTopTenIndividuals 16
 
 
 
@@ -46,11 +52,17 @@
 #define getUserProfileRequest @"/getprofile"
 #define forgotPasswordRequest @"/forgotpassword"
 #define getAllTeamsRequest @"/getallteams"
-#define getTeamsByTypeRequest  @"/getteamsbytype"
+#define getTeamsByCategoryRequest  @"/getteamsbycategory"
 #define requestNewTeamRequest @"/requestnewteam"
-#define getCurrentMonthTopicRequest @"/getCurrentMonthTopic"
-#define getPreviousMonthTopicsRequest @"/getPreviousMonthTopics"
-#define getChallengesForTopic @"/getChallengesForTopic"
+#define getCurrentMonthTopicRequest @"/getcurrentmonthtopic"
+#define getPastMonthTopicsRequest @"/getpastmonthtopics"
+#define getChallengesForTopicRequest @"/getchallengesfortopic"
+#define getUserPointForChallengeRequest @"/getuserpointforchallenge"
+#define setUserPointForChallengeRequest @"/setuserpointforchallenge"
+#define getTeamPointAndRankRequest @"/getteampointandrank"
+#define getParticipantPointAndRankRequest @"/getparticipantpointandrank"
+#define getTopTenTeamsRequest @"/gettoptenteams"
+#define getTopTenIndividualsRequest @"/gettoptenindividuals"
 
 
 

@@ -1,4 +1,4 @@
-//
+ //
 //  UUModel.m
 //  UUGreenU
 //
@@ -8,75 +8,150 @@
 
 #import "UUModel.h"
 
-//This app will cycle through a year, beginning
-// in August.  This number is important because
-// it will be used to determine if there
-// are previous month challenges or not
-#define BEGINNINGMONTH 8
-
-// for ease and consistency in accessing dictionaries
-#define monthNumberKey @"monthNumber"
-#define yearKey @"year"
-#define topicIDKey @"topicID"
-#define topicStringKey @"topicString"
-#define topicURLKey @"topicURL"
-
 
 @implementation UUModel
 {
-    int _userServerKey;
-    NSString* _userDisplayName;
+    //for creating 'sessions' to make server calls
+    UUSesson* _session;
+    
+    //user information
+    
+    int _userID;
     NSString* _userEmail;
     NSString* _userPassword;
-    NSString* _userTeamName;
-    UIImage*  _userProfileImage;
     
-    //date info
-    int _currentMonth;
-    int _currentYear;
-    NSString* _currentMonthURL;
     
-    // this holds the number of previous months available
-    int _numberOfPreviousMonths;
+    //data structures are created in the session object, and pointers sent to the model
     
-    //holds Topic Info for current Month
-    NSMutableDictionary* _currentMonthTopicDict;
+    //This dictionary stores information about the user
+    //#  userNameKey :  user display name
+    //#  userEmailKey:  user email
+    //#  userPassword:  user password
+    //#  userIdKey   :  user server id
+    //#  teamIDKey   :  ID of user's current team as string
+    //#  userImageKey:  user's profile image
+    //#  userRankMonthKey   : holds the rank as string  - not all teams will have these last 4 objects filled
+    //#  userRankAllTimeKey : holds the rank as string
+    //#  userMonthPointsKey : holds the team points as string
+    //#  userAllTimePointsKey : holds the team points as string
+    NSMutableDictionary* _userProfileDictionary;
     
-    //holds the topic and URL for the previous Months
-    //in reversehronoligical order
-    NSMutableArray* _previousTopicsArray;
+    
+    // path to the file stored on the iphone
+    NSString* _modelDataFilePath;
+    
+    
+    //holds an array of dictionaries, one dictionary for each available month topic
+    //IMPORTANT:  the current topic will be the first (position 0) in the array
+    // each dictionary will hold:
+    //#   'month'      :  holds the month integer as [NSString stringWithFormat:@"%d", month];
+    //#   'year'       :  holds the year integer as [NSString stringWithFormat:@"%d", year];
+    //#   'topicID     :  holds the topic key integer as [NSString stringWithFormat:@"%d", topicKey];
+    //#   'TopicTitle' :  holds the title string (to be used the 'title' on the take the challenge page)
+    //#   'TopicURL'   :  holds the URL for the topic as a string
+    //#   'ChallengesArray'  :  holds 3 dictionaries:  one for each challenge
+    //#           Each Challenge Dictionary will hold:
+    //#           'ChallengeDescr'    :  holds the description used on the "Take the Challenge" page
+    //#           'ChallengeKey'      :  holds the unique integer as [NSString stringWithFormat:@"%d", challengekey];
+    //#           'ChallengeNo'       :  holds the number 1, 2, or 3 as [NSString stringWithFormat:@"%d", challengeNo];
+    //#           'DaysPossible'      :  holds the number of days possible a user can fulfill the challnge as [NSString stringWithFormat:@"%d", daysPossible];
+    //#           'Difficulty'        :  holds the integer representing the challenge difficulty as [NSString stringWithFormat:@"%d", difficulty];
+    //#           'Impact'            :  holds the integer representing the challenge impact as [NSString stringWithFormat:@"%d", impact];
+    //#           'Teaser'            :  holds the 'teaser' string to be used on the buttons on the challenges page
+    //#           'Type'              :  holds the type string:  either 'One time' or 'Repeat'
+    //#           'UserStatus'        :  holds the user status integer as  [NSString stringWithFormat:@"%d", userStatus];
+    //#           'DateInput'         :  holds an array of dates the user has completed the challenge
+    //#           'UserPointsKey      :  holds total number of points the user has earned for this challenge, calculated by difficulty*Impact* number of times completed
+    //#           'UserCompleteDates' : holds an array of dates (each a string) that a user completed the challenge
+    NSMutableArray* _topicsArray;
+    
+    
+    //Holds and array of an array of dictionaries
+    // first array has three elements:  0: category schools, 1: category business, and 2: category other
+    //For each dictionary:
+    //#  teamNameKey        : holds team name as string
+    //#  teamIDKey          : holds team id as string
+    //#  teamRankMonthKey   : holds the rank as string  - not all teams will have these last 4 objects filled
+    //#  teamRankAllTimeKey : holds the rank as string
+    //#  teamMonthPointsKey : holds the team points as string
+    //#  teamAllTimePointsKey : holds the team points as string
+    NSArray* _teamsArray;
+    
+    
+    //we will also keep a dictionary so that the teams can be looked up by id
+    //#  teamIDKey:  points to the dictionary with this id
+    NSMutableDictionary* _teamsByIdDict;
+    
+    //Holds an array of dictionaries:
+    //#  topRankKey:  holds the rank as a number from 1 - 10 (note:  there CAN be ties, so 2 teams ranking '3' etc...
+    //#  topNameKey:  holds the name  (either individual or team, depending on the array)
+    //#  topPointsKey:  holds the points as string
+    NSMutableArray* _topUsersMonthly;
+    NSMutableArray* _topUsersAllTime;
+    NSMutableArray* _topTeamsMonthly;
+    NSMutableArray* _topTeamsAllTime;
+    
 }
 
-@synthesize registerParticipantDataReceivedDelegate;
-@synthesize participantLoginDataReceivedDelegate;
+@synthesize modelForSplashScreenDelegate;
+@synthesize modelForLoginScreenDelegate;
+@synthesize modelforRegisterParticipantScreenDelegate;
+@synthesize modelforNewTeamDelegate;
+@synthesize modelForChallengePointsUpdatedDelegate;
 
 /***
 *
 *      Constructor
-*
 */
 - (id)init
 {
     self = [super init];
     if (self)
     {
-        _userDisplayName = @"NEED DISPLAY NAME";  //FIX THIS!!!!!!!!!!!!!!!!!!!!!!!
-        _userTeamName = @"NEED TEAM NAME";        //FIX THIS TOO!!!!!!!
-        _userProfileImage = nil;
-        _userPassword = @"password";
+        //create the server session object
+        _session = [[UUSesson alloc] init];
+        [_session setSessionDelegate:self];
         
         
-        //initialize data structures
-        _currentMonthTopicDict = [[NSMutableDictionary alloc]init];
-        _previousTopicsArray   = [[NSMutableArray alloc]init];
+        //First, make sure the "UserInfo.plist" files exists
+        //The path to the NSDocuments directory in the user domain, ie this is our documents path (where things are stored locally to disc)
+        NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, TRUE) objectAtIndex:0];
+        //NSLog(@"Documents Path is: %@", documentsPath); // for testing
         
-        //##############################################
-        //#
-        //#    Start up functions:
-        //#
-        //###############################################
-         [self callServerStartupFunctions];
+        _modelDataFilePath = [documentsPath stringByAppendingPathComponent:@"UserInfo.plist"];
+        //NSLog(@"\nThe path is:  %@\n", _modelDataFilePath); //for testing
         
+        // check and see if if the data file already exists in the documents directory
+        if ([[NSFileManager defaultManager] fileExistsAtPath:_modelDataFilePath] == FALSE)
+        {
+            /***  We are creating a file called "UserInfo.plist".
+             NSBundle mainBundle:  the stuff that gets copied in "copy Bundle resouces" under
+             "Build Phases  >  Copy Bundle Resources"  (highlight the project (stuff) to see
+             
+             ** to create a new file, go to 'File > New File > Resourse > Property List
+             Lorenzo then highlighted Data.plist under 'Resources' and changed it from a dictionary to
+             an array. ***/
+            
+            // If the data file doesn't exist, copy it from the bundle.
+            NSString* seedDataPath = [[NSBundle mainBundle] pathForResource:@"UserInfo" ofType:@"plist"];
+            [[NSFileManager defaultManager] copyItemAtPath:seedDataPath toPath:_modelDataFilePath error:NULL];
+            
+        }//end if fileExists
+        
+        //now that we know the file exists, read in the user's email and password
+        NSArray* temp = [NSArray arrayWithContentsOfFile:_modelDataFilePath];
+        int tempCount = (int)[temp count];
+    
+        if (tempCount < 2) //just in case we have a corrupt file
+        {
+            _userEmail = needUserEmail;
+            _userPassword = needUserPassword;
+        }
+        else
+        {
+            _userEmail = temp[0];    //will be "NeedUserEmail" if none has been stored
+            _userPassword = temp[1]; //will be "NeedUserPassword" if none has been stored
+        }
         
      }
     else //no object
@@ -88,789 +163,636 @@
     
 }//end constructor
 
-/******************************************************************************************************
- *
- *                   Startup Functions:  info needed from server on first load
- *
- ******************************************************************************************************/
-/**
- *  This method calls all the functions that we want to load when first
- *  opening the app.
- *
- */
- - (void) callServerStartupFunctions
-{
-    // this will call the server for info about current month topic
-    // callback function is "getCurrentMonthAndTopic
-    [self sendMessageToServer:getCurrentMonthTopic withDataDictionary:NULL];
-    
-}//end call server starutp functions
-/***
- * This function gets an integer value for the current month, 
- * The associated integer value for the topicID, the topic
- * as a string, and the URL as a string.  It also fills in the 
- * _topicArray for all the previous months
- *
- */
-- (void) getCurrentMonthAndTopic:(int) responseType
-{
-
-    if (responseType == 1000)//success
-    {
-        _currentMonth =  [[_currentMonthTopicDict objectForKey:monthNumberKey]intValue];
-        _currentYear  =  [[_currentMonthTopicDict objectForKey:yearKey]intValue];
-        
-        // now that we have the current month, calculate the number of
-        // previous months available
-        if (_currentMonth != BEGINNINGMONTH)
-        {
-            //calculate how many months back we need to request
-            if (_currentMonth > BEGINNINGMONTH)
-            {
-                _numberOfPreviousMonths = _currentMonth - BEGINNINGMONTH;
-            }else
-            {
-                _numberOfPreviousMonths = 12 - BEGINNINGMONTH + _currentMonth;
-            }
-        }//end currentMonth != BeginningMonth
-        
-        //call sever to populate dictionaries for previous months
-        
-        
-        
-        
-        
-        
-    }
-    else //unsuccessful call
-    {
-        
-    }
-    
-    
-    //get previousmonths informationfrom the server
-    
-    //[self sendMessageToServer:getPreviousMonthTopic withDataDictionary:NULL];
-    //take this out - will be replaced by server method
-    for (int i = 1 ; i <= _numberOfPreviousMonths; i++)
-    {
-        int monthNumber = _currentMonth - (i);
-        if (monthNumber < 1)
-        {
-            monthNumber += 12;  //start back at December
-        }
-        NSMutableDictionary* newDict = [self getDictForMonth:5];
-        [_previousTopicsArray addObject:newDict];
-    }
-    
-    //end take this out
-
-    
-    
-    
-    
-}//end get current month and topic
 
 /******************************************************************************************************
  *
- *                                   Server Methods
- *
- ******************************************************************************************************/
-/**
- *  This method sends both GET and POST messages to the server.
- *
- *  Parameters:  serverMethod:   (int) this is an int that is #defined in the .h file for consistency
- *                               each method will need its own unique int
- *               action:  (int)  0 = POST, 1 = GET
- *
- *               dataDictionary:  the data that will be sent to the server
- *
- *       Note:  each method that calls this will have a specified call back function in the code
- *
- */
-- (void) sendMessageToServer:(int)serverMethod withDataDictionary:(NSMutableDictionary*)dataDictionary
-{
-    // step 1:  create the url and url request - adding the index at the end specifies to the server what index we are accessing
-    NSString* methodString = @"";
-    NSString* dataString = @"";
-    
-    
-    int action = POST; // default
-    
-    
-    // set the request string
-    switch (serverMethod)  //serverMethod constants declared in NetworkConstants.h
-    {
-        case (registerParticipant):
-        {
-            
-            methodString = [NSString stringWithFormat:@"%@", registerParticipantRequest];
-            action = POST;
-            
-            // set up the data to use
-            NSString* username = [dataDictionary objectForKey:@"displayName"];
-            NSString* email = [dataDictionary objectForKey:@"email"];
-            NSString* password = [dataDictionary objectForKey:@"password"];
-            
-            dataString = [NSString stringWithFormat:@"{ 'UserName' : '%@', 'Email' : '%@', 'Password' : '%@' }", username, email, password];
-            
-            break;
-        }
-        case (participantLogin):
-        {
-            methodString = [NSString stringWithFormat:@"%@", participantLoginRequest];
-            action = POST;
-            
-            // set up the data to use
-            NSString* email = [dataDictionary objectForKey:@"email"];
-            NSString* password = [dataDictionary objectForKey:@"password"];
-            
-            dataString = [NSString stringWithFormat:@"{ 'Email' : '%@', 'Password' : '%@' }", email, password];
-            
-            break;
-        }
-        case (updateUserProfile):
-        {
-            
-            
-            break;
-            
-        }
-        case (getUserProfile):
-        {
-            /*
-            methodString = [NSString stringWithFormat:@"%@", getUserProfileRequest];
-            action = GET;
-            int userKey = [self getUserKey];
-            dataString = [NSString stringWithFormat:@"{ 'UserKey' : '%d' }", userKey];
-            */
-            break;
-        }
-        case (forgotPassword):
-        {
-            break;
-        }
-        case (getAllTeams):
-        {
-            break;
-        }
-        case (getTeamsByType):
-        {
-            /*
-            methodString = [NSString stringWithFormat:@"%@", getTeamsByTypeRequest];
-            action = GET;
-            
-            NSString* teamType = [dataDictionary objectForKey:@"teamCategory"];
-            
-            dataString = [NSString stringWithFormat:@"{ '%@' }", teamType];*/
-            break;
-        }
-        case (requestNewTeam):
-        {
-            /*
-            methodString = [NSString stringWithFormat:@"%@", requestNewTeamRequest];
-            action = POST;
-            
-            // set up the data to use
-            NSString* userKeyString = [NSString stringWithFormat:@"%d", _userServerKey];
-            NSString* teamName = [dataDictionary objectForKey:@"newTeamName"];
-            NSString* teamCategory = [dataDictionary objectForKey:@"newTeamType"];
-            
-            dataString = [NSString stringWithFormat:@"{ 'UserKey' : '%@', 'TeamName' : '%@', 'TeamCategory' : '%@' }", userKeyString, teamName, teamCategory];*/
-            
-            break;
-        }
-        case (getCurrentMonthTopic):
-        {
-            methodString = [NSString stringWithFormat:@"%@", getCurrentMonthTopicRequest];
-            action = GET;
-            
-            //This function requires no parameters
-            dataString = @"";
-            
-            break;
-
-        }
-            
-        default:
-        {}
-    }// end switch
-    
-    
-    // we are using a mutable request so we can make changes to our request
-    NSMutableURLRequest* request = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:[UUNetworkBaseUrl stringByAppendingString:methodString]]];
-    
-    // set the request method
-    switch (action)
-    {
-        case (POST):
-        {
-            [request setHTTPMethod:@"POST"];
-            break;
-        }
-        case (GET):
-        {
-            [request setHTTPMethod:@"GET"];
-            break;
-        }
-            
-        default:
-        {}
-    }// end switch
-    
-    
-    
-    // step 2:  encode thet data to send
-    NSData* requestData = [NSData dataWithBytes:[dataString UTF8String] length:[dataString lengthOfBytesUsingEncoding:NSUTF8StringEncoding]];
-    
-    
-    // STEP 2)  Create  PList Data so we can make a request with data
-    // In order to send the dictionary, we have to encode it as well.  This server accepts PList data.
-    // In order to turn the dictionary into a PLIST, use the class NSPropertyListSerialization,
-    // and its static method that will turn data from a property list into an XML format property
-    // list  (ignore errors)
-    // This call returns NSData.
-    // NSData* requestData = [NSPropertyListSerialization dataFromPropertyList:dataDictionary format:NSPropertyListXMLFormat_v1_0 errorDescription:NULL];
-    
-    // often times when we are making requests for server data, we need to specify the type of data
-    // we are sending, because the server needs to interpret that data.  Without this next line of
-    // code, the server gave an error "Invalid content type".  We specified JSON.
-    [request setValue:@"application/json" forHTTPHeaderField:@"Content-Type"];
-    [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
-    [request setHTTPBody:requestData];
-    
-    
-    // STEP 3)  - make a connection - send the request asynchronously
-    // This is where we actually make the request.
-    // By default, the request made will be a 'GET' request (should get "This server...POST requests" as shown
-    // in the browser.
-    // the "NSData* responseData gets the data out of the URL connection - Note: it is returned as "NSData"
-    
-    [request setTimeoutInterval:30.0f]; // if no interaction after 30 seconds, connection dies
-    
-    
-    [NSURLConnection sendAsynchronousRequest:request
-                                       queue:[NSOperationQueue mainQueue]
-                           completionHandler:^(NSURLResponse *response, NSData *data, NSError *error)
-     {
-         // set the callback method
-         switch (serverMethod)
-         {
-             case (registerParticipant):
-             {
-                 [self responseForRegisterParticipantReceived:data withError:error];
-                 break;
-             }
-             case (participantLogin):
-             {
-                 [self responseForLoginParticipantReceived:data withError:error];
-                 break;
-             }
-             case (updateUserProfile):
-             {
-                 //[self responseForUpdateProfileReceived:data withError:error];
-                 break;
-             }
-             case (getUserProfile):
-             {
-                 //[self responseForGetProfileReceived:data withError:error];
-                 break;
-             }
-             case (forgotPassword):
-             {
-                 //[self responseForForgotPasswordReceived:data withError:error];
-                 break;
-             }
-             case (getAllTeams):
-             {
-                 //[self responseForGetAllTeamsReceived:data withError:error];
-                 break;
-             }
-             case (getTeamsByType):
-             {
-                 //[self responseForGetTeamsByTypeReceived:data withError:error];
-                 break;
-             }
-             case (requestNewTeam):
-             {
-                 //[self responseForRequestNewTeamReceived:data withError:error];
-                 break;
-             }
-             case (getCurrentMonthTopic):
-             {
-                 [self responseForGetCurrentMonthTopicReceived:data withError:error];
-                 break;
-             }
-             default:
-             {}
-         }
-         
-     } // end completion handler
-     ];
-    
-    
-}// end sendMessageToServer
-
-/******************************************************************************************************
- *
- *                              server response callback methods
+ *                   Log In Functions & Startup Functions
  *
  ******************************************************************************************************/
 
--(void) responseForRegisterParticipantReceived: (NSData*)responseData withError:(NSError*)error
+ - (void) loginFromSplashScreen
 {
-    //NSLog(@"Error:  %@", error); // for testing
-    //NSLog(@"Response data:  %@", responseData); // for testing
-    int responseType = 0;
-    
-    if(error == NULL) //everything ok
-    {
-        // the data sent back to us is a dictionary with two keys: Message and UseKey
-        NSError* jsonError;
-        NSDictionary* responseDictionary = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&jsonError];
+    //first, check for viable user and password stored on device
+    if ( ([_userEmail isEqualToString:needUserEmail]) || ([_userPassword isEqualToString:needUserPassword])){
         
-        int responseMessage = [[responseDictionary objectForKey:(@"Message")]intValue];
-        int userKey         = [[responseDictionary objectForKey:(@"UserKey")]intValue];
-        
-        //NSLog(@"Response Dictionary is: %@\n", responseDictionary); // for testing
-        //NSLog(@"responseMessage is: %d\n", responseMessage);        // for testing
-        //NSLog(@"userKey         is: %d\n", userKey);                // for testing
-        
-        // notes:
-        //   message values:
-        //  1000:  success:  participant successfully logged in
-        //  1001:  failure:  invalid email format
-        //  1002:  failure:  invalid password format
-        //  1003:  failure:  invalid username format
-        //  1004:  failure:  email already exists in database≈ß
-        //  9999:  failure:  general failure
-        //   userkey values:
-        //  100001:   some user key starting with 100001 if successful
-        //  0:        0 upon failure
-        
-        
-        if (responseMessage == 1000)//successful register  ??????? is this supposed to be responsemesage?
-        {
-            _userServerKey = userKey; //store the key
-        }
-        
-        responseType = responseMessage;
-        
-    }
-    else // error not null
-    {
-        responseType = 9999; // just set to general server error
+        [[self modelForSplashScreenDelegate] loginFromSplashScreenServerDataReceived:LOGINFAILURE];
+    }else{
+        [_session loginWithEmail:_userEmail andPassword:_userPassword andType:LOGINFROMSPLASH];
     }
     
-    // inform the CreateUserViewController that server has replied back
-    [[self registerParticipantDataReceivedDelegate] registerParticipantServerDataReceived:responseType];
-    
-}// end responseForRegisterParticipantReceived
+}//end loginFromSplashScreen
 
-
--(void) responseForLoginParticipantReceived:(NSData*)responseData withError:(NSError*)error
+- (void) loginFromLoginScreenWithEmail:(NSString*)userEmail andPassword:(NSString*)password
 {
-    int responseType = 0;
+    [_session loginWithEmail:userEmail andPassword:password andType:LOGINFROMLOGIN];
     
-    if(error == NULL) //everything ok
-    {
-        // the data sent back to us is a dictionary with two keys: Message and UseKey
-        NSError* jsonError;
-        NSDictionary* responseDictionary = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&jsonError];
-        NSLog(@"Response Dictionary is: %@\n", responseDictionary); // for testing
-        
-        int responseMessage = [[responseDictionary objectForKey:(@"Message")]intValue];
-        int userKey         = [[responseDictionary objectForKey:(@"UserKey")]intValue];
-        NSString* userName  = [responseDictionary objectForKey:(@"UserName")];
-        
-        
-        //NSLog(@"responseMessage is: %d\n", responseMessage);        // for testing
-        //NSLog(@"userKey         is: %d\n", userKey);                // for testing
-        //NSLog(@"userName        is: %d\n", userName);               // for testing
-        
-        // notes:
-        //   message values:
-        //  1000:  success:  participant successfully logged in
-        //  1001:  failure:  invalid email format
-        //  1005:  failure:  login failure
-        //  9999:  failure:  general failure
-        //   userkey values:
-        //  100001:   some user key starting with 100001 if successful
-        //  0:        0 upon failure
-        
-        
-        if (responseMessage == 1000)//successful register
-        {
-            _userServerKey = userKey; //store the key
-            _userDisplayName = userName;
-        }
-        
-        responseType = responseMessage;
-        
-    }
-    else // error not null
-    {
-        responseType = 9999; // just set to general server error
-    }
-    
-    // inform the CreateUserViewController that server has replied back
-    [[self participantLoginDataReceivedDelegate] ParticipantLoginServerDataReceived:responseType];
-    
-    
-}// end responseForLoginParticipantReceived
+}//end loginFromLoginScreen
 
-
-
--(void) responseForGetCurrentMonthTopicReceived:(NSData*)responseData withError:(NSError*)error
+- (void) registerNewParticipantWithEmail:(NSString*)email andPassword:(NSString*)password andUserName:(NSString*)username
 {
-    int responseType = 0;
+    [_session registerNewParticipantWithEmail:email andPassword:password andUserName:username];
     
-    if(error == NULL) //everything ok
-    {
-        // the data sent back to us is a dictionary with two keys: Message and UseKey
-        NSError* jsonError;
-        NSDictionary* responseDictionary = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&jsonError];
-        NSLog(@"Response Dictionary is: %@\n", responseDictionary); // for testing
-        
-        int responseMessage = [[responseDictionary objectForKey:(@"Message")]intValue];
-
-        
-        //NSLog(@"responseMessage is: %d\n", responseMessage);      // for testing
-        //NSLog(@"month           is: %d\n", month);                // for testing
-        //NSLog(@"sequence        is: %d\n", sequence);             // for testing
-        //NSLog(@"topicKey        is: %d\n", topicKey);             // for testing
-        //NSLog(@"year            is: %d\n", year);                 // for testing
-        //NSLog(@"monthURL        is: %@\n", monthURL);             // for testing
-        //NSLog(@"topicTitle      is: %@\n", topicTitle);           // for testing
-        
-        // notes:
-        //   message values:
-        //  1000:  success:  participant successfully logged in
-        //  9999:  failure:  general failure
-        
-        
-        if (responseMessage == 1000)//successful
-        {
-            NSArray* topicsListArray = [responseDictionary objectForKey:(@"TopicsList")];
-            NSDictionary* topicsListDict = topicsListArray[0];
-            int month    = [[topicsListDict objectForKey:(@"Month")]intValue];
-            int sequence = [[topicsListDict objectForKey:(@"Sequence")]intValue];
-            int topicKey = [[topicsListDict objectForKey:(@"TopicKey")]intValue];
-            int year     = [[topicsListDict objectForKey:(@"Year")]intValue];
-            NSString* monthURL   = [topicsListDict objectForKey:(@"TopicPage")];
-            NSString* topicTitle = [topicsListDict objectForKey:(@"TopicTitle")];
-            NSString* monthString = [NSString stringWithFormat:@"%d", month];
-            NSString* yearString  = [NSString stringWithFormat:@"%d", year];
-            NSString* topicKeyString = [NSString stringWithFormat:@"%d", topicKey];
-            
-            
-            
-            //set the dictionary values
-            [_currentMonthTopicDict setObject:monthString forKey:monthNumberKey];
-            [_currentMonthTopicDict setObject:yearString forKey:yearKey];
-            [_currentMonthTopicDict setObject:topicKeyString forKey:topicIDKey];
-            [_currentMonthTopicDict setObject:topicTitle forKey:topicStringKey];
-            [_currentMonthTopicDict setObject:monthURL forKey:topicURLKey];
-            
-            //tell the model that information has been returned
-
-        }//end success
-        else  //unsuccessful call
-        {
-            
-            
-        }
-        
-        responseType = responseMessage;
-        
-    }
-    else // error not null
-    {
-        responseType = 9999; // just set to general server error
-    }
-    
-    // inform the CreateUserViewController that server has replied back
-    //[[self participantLoginDataReceivedDelegate] ParticipantLoginServerDataReceived:responseType];
-    
-}// end responseForGetCurrentMonthTopicReceived
-
-
-/******************************************************************************************************
- *
- *                                   Getters  on local device
- *
- ******************************************************************************************************/
- -(BOOL) hasUserKey
-{
-    //The path to the NSDocuments directory in the user domain, ie this is our documents path
-//    NSString* documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, TRUE) objectAtIndex:0];
-    //NSLog(@"Documents Path is: %@", documentsPath); // for testing
-    
-    /*
-    // next load the teams
-    _modelDataFilePath = [documentsPath stringByAppendingPathComponent:@"SignInInfo.plist"];
-    // verifyFileExists:@"SignInInfo.plist";
-    if ([[NSFileManager defaultManager] fileExistsAtPath:_modelDataFilePath] == FALSE)
-    {
-        
-        // If the data file doesn't exist, copy it from the bundle.
-        NSString* seedDataPath = [[NSBundle mainBundle] pathForResource:@"SignInInfo" ofType:@"plist"];
-        [[NSFileManager defaultManager] copyItemAtPath:seedDataPath toPath:_modelDataFilePath error:NULL];
-        
-    }
-    
-    NSLog(@"\nThe path is:  %@\n", _modelDataFilePath); // for testing
-    // now that we know the data file exists, load it from the documents directory
-    NSMutableArray* _rawData = [[NSMutableArray alloc] initWithContentsOfFile:_modelDataFilePath];
-    
-    // now abstract the user login, password, and server key from the array
-    //NSString* _userLogin     = [[_rawData objectAtIndex:0] objectForKey:@"UserLogin"];
-    //NSLog(@"User Login is: %@\n", _userLogin);  // for testing
-    // NSString* _userPassword  = [[_rawData objectAtIndex:1] objectForKey:@"UserPassword"];
-    /// NSLog(@"User Password is: %@\n", _userPassword);  // for testing
-    // NSNumber* _userServerKey = [[_rawData objectAtIndex:2] objectForKey:@"UserServerKey"];
-    // NSLog(@"User ServerKey is: %@\n", _userServerKey);  // for testing
-    
-    
-    // [_signInInfoArray addObject:_userLogin];
-    //[_signInInfoArray addObject:_userPassword];
-    //[_signInInfoArray addObject:_userServerKey];
-    //NSLog(@"%@", [_signInInfoArray description]);   // for testing  - output what the sign in data is
-    
-    
-    // check with the server to make sure user info is valid
-    */
-    
-    return FALSE;  // this needs to be changed, for now, always return false
-}
+}//end register NewParticipant
 
 
 
 /******************************************************************************************************
  *
- *                                   Getters & Setters
+ *                     New Team Request
  *
  ******************************************************************************************************/
 
+- (void) requestNemTeam:(NSString*)teamName andType:(NSString*)teamType
+{
+    [_session requestNemTeam:teamName andType:teamType andUserId:[_userProfileDictionary objectForKey:userIDKey]];
+    
+}//end requestNewTem
+
+- (void) changeUserTeam:(NSString*)teamID
+{
+    [_session changeUserTeam:teamID withUserID:[_userProfileDictionary objectForKey:userIDKey]];
+}//end changeUserTeam
+
+/******************************************************************************************************
+ *
+ *                   Update UserPoints
+ *
+ ******************************************************************************************************/
+
+- (void) updateUserPointsWithTopicsArrayLocation:(int)arrayLocation andChallengeNumber:(int)challengeNumber andDatesArray:(NSMutableArray*)datesArray
+{
+    NSString* challengeIDString = [self getChallengeIDasStringForChallengeMonth:arrayLocation andChallengeNumber:challengeNumber];
+    [_session updateUserPointsWithTopicsArrayLocation:arrayLocation andChallengeNumber:challengeNumber andChallengeID:challengeIDString andDatesArray:datesArray andUserID:[_userProfileDictionary objectForKey:userIDKey]];
+    
+}//end updateUserPoints
+
+/******************************************************************************************************
+ *
+ *                   Update UserProfile
+ *
+ ******************************************************************************************************/
+
+/******************************************************************************************************
+ *
+ *                                   Session Callback Methods
+ *
+ ******************************************************************************************************/
+
+- (void) loginResponseReceived:(int)responseCase andUserID:(int)userID andCallType:(int)callType
+{
+    if (responseCase == SUCCESS){
+        _userID = userID;
+        NSString* userIDasString = [NSString stringWithFormat:@"%d", _userID];
+        
+        //lauch startup functions  //'call type' determines whether the splash or login screen is
+        //notified when the calls return.
+        [_session launchServerStartupFunctionsWithUserID:userIDasString andCallType:callType];
+        
+    }else{
+        if (callType == LOGINFROMLOGIN){
+            [[self modelForLoginScreenDelegate] loginFromLoginScreenServerDataReceived:responseCase];
+        }else{ //loginfromSplash
+            //send the message to the modelSplashScreenDelegate
+            [[self modelForSplashScreenDelegate] loginFromSplashScreenServerDataReceived:responseCase];
+        }
+    }
+}//end loginFromSplashScreenResponseRecieved
+
+
+- (void) registerParticipantResponseReceived:(int)responseCase andUserID:(int)userID
+{
+    if (responseCase == SUCCESS){
+        _userID = userID;
+        NSString* userIDasString = [NSString stringWithFormat:@"%d", _userID];
+       
+        [_session launchServerStartupFunctionsWithUserID:userIDasString andCallType:LOGINFROMREGISTERPARTICIPANT];
+        
+    }else{
+        [[self modelforRegisterParticipantScreenDelegate] registerParticipantServerDataReceived:responseCase];
+    }
+    
+}//end registerParticipantRepsonseReceived
+
+
+- (void) startupCallsDataReceived:(int)responseCase withCallType:(int)callType{
+    
+    if (responseCase == SUCCESS){
+        //get the data structures from the session
+        
+        _userProfileDictionary = [_session getUserProfileDictionary];
+        _topicsArray = [_session getTopicsArray];
+        _teamsArray = [_session getTeamsArray];
+        _teamsByIdDict = [_session getTeamsByDict];
+        _topUsersMonthly = [_session getTopUsersCurrentMonth];
+        _topUsersAllTime = [_session getTopUsersAllTime];
+        _topTeamsMonthly = [_session getTopTeamsCurrentMonth];
+        _topTeamsAllTime = [_session getTopTeamsAllTime];
+  
+    }//end SUCCESS
+    
+    if (callType == LOGINFROMLOGIN){
+        [[self modelForLoginScreenDelegate] startupDataReceived:responseCase];
+    }else if (callType == LOGINFROMSPLASH){
+        [[self modelForSplashScreenDelegate] startupDataReceived:responseCase];
+    }else{ //LOGINFROMREGISTERPARTICIPANT
+        [[self modelforRegisterParticipantScreenDelegate] startupDataReceived:responseCase];
+    }
+    
+}//end startupCallsDataReceived
+
+- (void) newTeamRequestResponseReceived:(int)responseCase
+{
+    [[self modelforNewTeamDelegate] responseforRequestNewTeamReceived:responseCase];
+    
+}//end newTeamRequest
+
+- (void) changeTeamFromTeamsPageResponseReceived:(int)responseCase andTeamID:(NSString *)teamID andAllTimeRank:(int)allTimeRank andMonthRank:(int)monthRank andAllTimePoint:(int)allTimepoint andMonthPoint:(int)monthPoint
+{
+    if (responseCase == SUCCESS){
+        NSMutableDictionary* teamDict = [_teamsByIdDict objectForKey:teamID];
+        [teamDict setObject:[NSString stringWithFormat:@"%d", allTimeRank]  forKey:teamAllTimeRankKey];
+        [teamDict setObject:[NSString stringWithFormat:@"%d", allTimepoint] forKey:teamAllTimePointsKey];
+        [teamDict setObject:[NSString stringWithFormat:@"%d", monthRank]    forKey:teamCurrentMonthRankKey];
+        [teamDict setObject:[NSString stringWithFormat:@"%d", monthPoint]   forKey:teamCurrentMonthPointsKey];
+        
+        [_userProfileDictionary setObject:teamID forKey:teamIDKey];
+    }//end success
+    
+    //send message back to the teams page
+    [[self modelforNewTeamDelegate] responseForChangeTeamResponseReceived:responseCase];
+    
+}//end changeTeam
+
+- (void) updateUserPointsForChallengeResponseReceivedWithDateArray:(NSArray *)dateArray andTopicsArrayLocation:(int)arrayLocation andChallengeNumber:(int)challengeNumber andNetworkError:(BOOL)networkError
+{
+     //add this array to the challenge dictionary
+     NSMutableDictionary* topicDict = _topicsArray[arrayLocation];
+     NSArray* challengesArray = [topicDict objectForKey:challengeArrayKey];
+     NSMutableDictionary* challengeDict = challengesArray[challengeNumber - 1];
+     
+     [challengeDict setObject:dateArray forKey:dateInputKey];
+    
+     //update the user status here
+     int daysUserCompleted = (int)[dateArray count];
+     int daysPossible = [[challengeDict objectForKey:daysPossibleKey]intValue];
+     
+     NSString* userStatus;
+     if (daysUserCompleted >= daysPossible){
+         userStatus = @"2"; //done
+     }else if (daysUserCompleted == 0){
+         userStatus = @"0";  //not started
+     }else{
+         userStatus = @"1"; //in progress
+     }
+     
+     [challengeDict setObject:userStatus forKey:userStatusKey];
+     
+     //inform the specific challenge View controller that the operation is complete
+    [[self modelForChallengePointsUpdatedDelegate] userChallengePointsUpdatedwithError:networkError];
+    
+}//end updateUserPointsForChallenge
+
+/******************************************************************************************************
+ *
+ *                                   Getters
+ *
+ ******************************************************************************************************/
+
+//##############################################
+//######  Getters/Setters for User Info  #######
+//##############################################
 - (NSString*) getUserName
-{
-    return _userDisplayName;
-}
+{    return [_userProfileDictionary objectForKey:userNameKey]; }
+
+- (NSString*) getUserPassword
+{    return [_userProfileDictionary objectForKey:userPasswordKey]; }
+
+- (NSString*) getUserIdAsString
+{    return [_userProfileDictionary objectForKey:userIDKey]; }
+
+- (NSString*) getUserEmail
+{    return [_userProfileDictionary objectForKey:userEmailKey]; }
+
+- (UIImage*) getUserImage
+{    return [_userProfileDictionary objectForKey:userImageKey]; }
+
+- (NSString*) getUserTeamIDasString
+{   return [_userProfileDictionary objectForKey:teamIDKey]; }
 
 - (NSString*) getUserTeamName
 {
-    return _userTeamName;
-}
+    NSString* teamIDString = [_userProfileDictionary objectForKey:teamIDKey];
+    if ([teamIDString isEqualToString:noTeamSelectedID])
+    {   return @"No Team Selected";    }
+    return [self getTeamNameByTeamID:teamIDString];
+}//end getUserTeamName
 
-- (void) setUserProfileImage:(UIImage*)newImage
+- (int) getUserRank:(int)monthlyORAllTime
 {
-    _userProfileImage = newImage;
-}
+    int rank;
+    if (monthlyORAllTime == ALLTIME){
+        rank = [[_userProfileDictionary objectForKey:userAllTimeRankKey]intValue];
+    }else{  //current month
+        rank = [[_userProfileDictionary objectForKey:userCurrentMonthRankKey]intValue];
+    }
+    return rank;
+}//end getUSerRank
 
-- (UIImage*) getUserImage
+- (int) getUserPoints:(int)monthlyOrAllTime
 {
-    return _userProfileImage;
-}
-
-- (void) setUserPassword: (NSString*)newPassword
-{
-    _userPassword = newPassword;
+    int points;
+    if (monthlyOrAllTime == ALLTIME){
+        points = [[_userProfileDictionary objectForKey:userAllTimePointsKey]intValue];
+    }else{  //current month
+        points = [[_userProfileDictionary objectForKey:userCurrentMonthPointsKey]intValue];
+    }
+    return points;
     
-}
-
-- (NSString*) getUserPassword
-{
-    return _userPassword;
-}
+}//end getUserPoints
 
 /***
  *
- * This method is called from the LoginViewController if the response was '1000'
- *  from "responseForLoginParticipantRecived"
+ * This method is called when getUserProfile is successfully called from the session object
+ * and upon first load for successful login or register participant
  */
 - (void) storeEmail:(NSString*)email andPassword: (NSString*)password
 {
     _userEmail = email;
     _userPassword = password;
     
+    //write values to disc
+    NSArray* userInfoArray = [[NSArray alloc] initWithObjects:_userEmail, _userPassword, nil];
+    [userInfoArray writeToFile:_modelDataFilePath atomically:TRUE];
     
 }//end storeEmailAndPassword
 
-/***
- *
- * This method is called from the CreateUserViewController if the response was '1000'
- *  from "responseForRegisterParticipantRecived"
- */
-- (void) storeUserName: (NSString*)userName
+
+//#############################################################
+//######  Getters for Topic Info                        #######
+//#############################################################
+- (int) getMonthNumAsInt:(int)topicsArrayLocation
 {
-    _userDisplayName = userName;
+    NSMutableDictionary* temp  = _topicsArray[topicsArrayLocation];
+    return [[temp objectForKey:monthKey]intValue];
     
+}//end getMonthNumAsInt
+
+- (int) getYearNumAsInt:(int)topicsArrayLocation
+{
+    NSMutableDictionary* temp  = _topicsArray[topicsArrayLocation];
+    return [[temp objectForKey:yearKey]intValue];
+    
+} //end getYearNumAsInt
+
+- (NSString*) getTopicIDAsString:(int) topicArrayLocation
+{
+    NSMutableDictionary* temp = _topicsArray[topicArrayLocation];
+    
+    int topicId = [[temp objectForKey:topicIDKey]intValue];
+    NSString* topicString = [NSString stringWithFormat:@"%d", topicId];
+    return topicString;
+    
+}//end getTopicIDAsString
+
+- (NSString*) getMonthTopicTitle:(int)topicArrayLocation
+{
+    NSMutableDictionary* temp = _topicsArray[topicArrayLocation];
+    return [temp objectForKey:topicTitleKey];
+    
+}//end getMonthTopicTitle
+
+-  (int) getNumberOfPreviousTopics
+{    return (int)([_topicsArray count] -1); }
+
+- (NSString*) getMonthURLString:(int)topicArrayLocation
+{
+    NSMutableDictionary* temp = _topicsArray[topicArrayLocation];
+    return [temp objectForKey: topicURLKey];
+    
+}//end getMonthURLString
+
+
+//#############################################################
+//######  Getters for Challenge Info                    #######
+//#############################################################
+- (NSString*) getChallengeIDasStringForChallengeMonth:(int) topicArrayLocation andChallengeNumber:(int)challengeNumber
+{
+    NSMutableDictionary* temp = _topicsArray[topicArrayLocation];
+    NSMutableArray* tempArray = [temp objectForKey:challengeArrayKey];
+    NSMutableDictionary* challengeDict = tempArray[challengeNumber - 1];  //-1 because 1st challenge is in spot '0', etc
+    
+    int challengeNum = [[challengeDict objectForKey:challengeIDKey]intValue];
+    NSString* challengeIDString = [NSString stringWithFormat:@"%d", challengeNum];
+    return challengeIDString;
+    
+}//end getChallengeIDasStringForChallengeMonth
+
+- (NSString*) getChallengeTeaser:(int)topicArrayLocation andChallengeNumber:(int)challengeNumber
+{
+    NSMutableDictionary* temp = _topicsArray[topicArrayLocation];
+    NSArray* tempArray = [temp objectForKey:challengeArrayKey];
+    NSMutableDictionary* tempChallengeDict = tempArray[challengeNumber - 1];
+    
+    return [tempChallengeDict objectForKey:teaserKey];
+    
+}//end getChallengeTeaser
+
+- (NSString*) getChallengeDescr:(int)topicArrayLocation andChallengeNumber:(int)challengeNumber
+{
+    NSMutableDictionary* temp = _topicsArray[topicArrayLocation];
+    NSArray* tempArray = [temp objectForKey:challengeArrayKey];
+    NSMutableDictionary* tempChallengeDict = tempArray[challengeNumber - 1];
+    
+    return [tempChallengeDict objectForKey:challengeDescKey];
+    
+}//end getChallengeDesc
+
+- (int) getChallengeNumDaysPossible:(int)topicArrayLocation andChallengeNumber:(int)challengeNumber
+{
+    NSMutableDictionary* temp = _topicsArray[topicArrayLocation];
+    NSArray* tempArray = [temp objectForKey:challengeArrayKey];
+    NSMutableDictionary* tempChallengeDict = tempArray[challengeNumber - 1];
+    
+    return [[tempChallengeDict objectForKey:daysPossibleKey]intValue];
+    
+}//end getChallengeNumberDaysPossible
+
+- (int) getChallengeDifficulty:(int)topicArrayLocation andChallengeNumber:(int)challengeNumber
+{
+    NSMutableDictionary* temp = _topicsArray[topicArrayLocation];
+    NSArray* tempArray = [temp objectForKey:challengeArrayKey];
+    NSMutableDictionary* tempChallengeDict = tempArray[challengeNumber - 1];
+    
+    return [[tempChallengeDict objectForKey:difficultyKey]intValue];
+    
+}//end getChallengeDifficulty
+
+- (int) getChallengeImpact:(int)topicArrayLocation andChallengeNumber:(int)challengeNumber
+{
+    NSMutableDictionary* temp = _topicsArray[topicArrayLocation];
+    NSArray* tempArray = [temp objectForKey:challengeArrayKey];
+    NSMutableDictionary* tempChallengeDict = tempArray[challengeNumber - 1];
+    
+    return [[tempChallengeDict objectForKey:impactKey]intValue];
+    
+}//end getChallengeImpact
+
+- (int) getChallengePointsForUser:(int)topicArrayLocation andChallengeNumber:(int)challengeNumber
+{
+    NSMutableDictionary* temp = _topicsArray[topicArrayLocation];
+    NSArray* tempArray = [temp objectForKey:challengeArrayKey];
+    NSMutableDictionary* tempChallengeDict = tempArray[challengeNumber - 1];
+    
+    int impact = [[tempChallengeDict objectForKey:impactKey]intValue];
+    int difficulty = [[tempChallengeDict objectForKey:difficultyKey]intValue];
+    int userNumTimesComplete = (int)[[tempChallengeDict objectForKey:dateInputKey] count];
+    
+    return userNumTimesComplete*difficulty*impact;
+    
+}//end getChallengePointsForUser
+
+- (int) getChallengePointsTotalPossible:(int)topicArrayLocation andChallengeNumber:(int)challengeNumber
+{
+    NSMutableDictionary* temp = _topicsArray[topicArrayLocation];
+    NSArray* tempArray = [temp objectForKey:challengeArrayKey];
+    NSMutableDictionary* tempChallengeDict = tempArray[challengeNumber - 1];
+    
+    int impact = [[tempChallengeDict objectForKey:impactKey]intValue];
+    int difficulty = [[tempChallengeDict objectForKey:difficultyKey]intValue];
+    int numTimesPossible = [[tempChallengeDict objectForKey:daysPossibleKey]intValue];
+    
+    return numTimesPossible*difficulty*impact;
+    
+}//end getChallengePointsTotalPossible
+
+- (NSString*) getUserStatusForChallenge:(int)topicArrayLocation andChallengeNumber: (int)challengeNumber
+{
+    NSMutableDictionary* temp = _topicsArray[topicArrayLocation];
+    NSArray* tempArray = [temp objectForKey:challengeArrayKey];
+    NSMutableDictionary* tempChallengeDict = tempArray[challengeNumber - 1];
+    int status = [[tempChallengeDict objectForKey:userStatusKey]intValue];
+    
+    NSString* statusString;
+    if (status == 1)
+        statusString = @"In progress!";
+    else if (status == 2)
+        statusString = @"Complete!";
+    else //0
+        statusString = @"Take Challenge!";
+    
+    return statusString;
+    
+}//end getUserStatusForChallenge
+
+- (NSArray*) getUserCompletionArrayChallengeMonth:(int) topicArrayLocation andChallengeNumber:(int)challengeNumber
+{
+    NSMutableDictionary* temp = _topicsArray[topicArrayLocation];
+    NSMutableArray* tempArray = [temp objectForKey:challengeArrayKey];
+    NSMutableDictionary* challengeDict = tempArray[challengeNumber - 1];  //-1 because 1st challenge is in spot '0', etc
+    
+    //int challengeNum = [[challengeDict objectForKey:challengeIDKey]intValue];
+    //NSString* challengeIDString = [NSString stringWithFormat:@"%d", challengeNum];
+    return [challengeDict objectForKey:dateInputKey];
+    
+}//end getChallengeIDasStringForChallengeMonth
+
+- (int) getChallengeType:(int)topicArrayLocation andChallengeNumber:(int)challengeNumber
+{
+    int type;
+    NSMutableDictionary* temp = _topicsArray[topicArrayLocation];
+    NSArray* tempArray = [temp objectForKey:challengeArrayKey];
+    NSMutableDictionary* tempChallengeDict = tempArray[challengeNumber - 1];
+    NSString* typeString = [tempChallengeDict objectForKey:typeKey];
+    
+    if ([typeString isEqualToString:oneTimeString]){
+        type = ONETIME;
+    }else{
+        type = REPEAT;
+    }
+    
+    return type;
 }
 
-/***
- *  Current date information
- */
 
-- (int) getCurrentMonth
+//#############################################################
+//######  Getters for Teams Info                        #######
+//#############################################################
+
+- (int) getUserTeamRank:(int)monthlyORAllTime
 {
+    int teamRank;
     
-    return _currentMonth;
+    NSString* teamIDString = [_userProfileDictionary objectForKey:teamIDKey];
+    NSMutableDictionary* dict = [_teamsByIdDict objectForKey:teamIDString];
+    if (monthlyORAllTime == ALLTIME){
+        teamRank = [[dict objectForKey:teamAllTimeRankKey]intValue];
+    }else{ //current month
+        teamRank = [[dict objectForKey:teamCurrentMonthRankKey]intValue];
+    }
+    return teamRank;
+    
+}//end getUSerTeamRank
+
+- (int) getUserTeamPoints:(int)monthlyORAllTime
+{
+    int teamPoints;
+    
+    NSString* teamIDString = [_userProfileDictionary objectForKey:teamIDKey];
+    NSMutableDictionary* dict = [_teamsByIdDict objectForKey:teamIDString];
+    if (monthlyORAllTime == ALLTIME){
+        teamPoints = [[dict objectForKey:teamAllTimePointsKey]intValue];
+    }else{ //current month
+        teamPoints = [[dict objectForKey:teamCurrentMonthPointsKey]intValue];
+    }
+    return teamPoints;
+    
+}//end getUSerTeamRank
+
+- (int) getNumberOfTeamsForCategory:(NSString*)category
+{
+    NSMutableArray* teamsArray;
+    
+    if ([category isEqualToString:SCHOOL]){
+        teamsArray = [_teamsArray objectAtIndex:0];
+    }else if ([category isEqualToString:BUSINESS]){
+        teamsArray = [_teamsArray objectAtIndex:1];
+    }else{//other
+        teamsArray = [_teamsArray objectAtIndex:2];
+    }
+    
+    return (int)[teamsArray count];
 }
 
-- (int) getCurrentYear
+- (NSString*)getTeamNameforCategory:(NSString*)category andRowNumber:(int)row
 {
     
-    return _currentYear;
+    NSMutableArray* teamsArray;
+    
+    if ([category isEqualToString:SCHOOL]){
+        teamsArray = [_teamsArray objectAtIndex:0];
+    }else if ([category isEqualToString:BUSINESS]){
+        teamsArray = [_teamsArray objectAtIndex:1];
+    }else{//other
+        teamsArray = [_teamsArray objectAtIndex:2];
+    }
+    
+    NSMutableDictionary* dict = [teamsArray objectAtIndex:row];
+    return [dict objectForKey:teamNameKey];
+    
+}//end getTeamNameForCategory
+
+- (NSString*)getTeamIdAsStringForCategory:(NSString*)category andRowNumber:(int)row
+{
+    NSMutableArray* teamsArray;
+    
+    if ([category isEqualToString:SCHOOL]){
+        teamsArray = [_teamsArray objectAtIndex:0];
+    }else if ([category isEqualToString:BUSINESS]){
+        teamsArray = [_teamsArray objectAtIndex:1];
+    }else{//other
+        teamsArray = [_teamsArray objectAtIndex:2];
+    }
+    
+    NSMutableDictionary* dict = [teamsArray objectAtIndex:row];
+    
+    return [dict objectForKey:teamIDKey];
+}//end getTeamIDAsString
+
+- (NSString*)getTeamNameByTeamID:(NSString*)teamID
+{
+    NSMutableDictionary* dict = [_teamsByIdDict objectForKey:teamID];
+    return [dict objectForKey:teamNameKey];
+}//end getTeamNameByTeamId
+
+- (NSMutableDictionary*)getTeamDictionaryByTeamID:(NSString*)teamID
+{    return [_teamsByIdDict objectForKey:teamID];}
+
+
+//#############################################################
+//######  Getters for Top Teams/Individuals             #######
+//#############################################################
+
+- (int) getTopIndividualsCount:(int)monthlyORAllTime
+{
+    int count;
+    
+    if (monthlyORAllTime == MONTHLY){
+        count = (int)[_topUsersMonthly count];
+    }else{
+        count = (int)[_topUsersAllTime count];
+    }
+    return count;
 }
-/****
- *
- *  Challenge information
- */
-- (NSString*) getCurrentChallengeTopic
+
+- (int) getTopTeamsCount:(int)monthlyORAllTime
 {
-    return [_currentMonthTopicDict objectForKey:topicStringKey];
-
-}// end get challenge topic
-
-- (int) getTopicIDForCurrentMonth: (int) month
-{
-    return [[_currentMonthTopicDict objectForKey:topicIDKey]intValue];
-
-}//end getTopicIDForMonth
-
-- (NSString*) getCurrentMonthURL: (int) month
-{
-    return [_currentMonthTopicDict objectForKey:topicURLKey];
+    int count;
     
-}//end getURL for Month
+    if (monthlyORAllTime == MONTHLY){
+        count = (int)[_topTeamsMonthly count];
+    }else{
+        count = (int)[_topTeamsAllTime count];
+    }
+    return count;
+}
 
-
-
-
-
-
-
-
-
-
-/*******
- *
- *   THIS IS FOR TESTING  - TO BE REPLACED WITH SERVER FUNTIONS
- *
- */
-
-- (NSMutableDictionary*) getDictForMonth: (int)month
+- (NSString*) getTopNames:(int)individualORTeam monthORAllTime:(int)monthORAllTime arrayPosition:(int)arrayPosition
 {
-
-    NSMutableDictionary* newDict = [[NSMutableDictionary alloc]init];
-    switch (month)
+    NSMutableDictionary* dict;
+    NSString* keyString;
+    
+    if (individualORTeam == INDIVIDUAL)
     {
-        case (JAN):
-        {
-            [newDict setObject:@"1" forKey:monthNumberKey];
-            [newDict setObject:@"10" forKey:topicIDKey];
-            [newDict setObject:@"Green New Year" forKey:topicStringKey];
-            [newDict setObject:@"JAN URL GOES HERE" forKey:topicURLKey];
-            break;
+        keyString = topIndividualNameKey;
+        
+        if (monthORAllTime == MONTHLY){
+            dict = [_topUsersMonthly objectAtIndex:arrayPosition];
+        }else{//monthORAllTime = ALLTIME
+            dict = [_topUsersAllTime objectAtIndex:arrayPosition];
         }
-        case (FEB):
-        {
-            [newDict setObject:@"2" forKey:monthNumberKey];
-            [newDict setObject:@"20" forKey:topicIDKey];
-            [newDict setObject:@"Reusable Thinking" forKey:topicStringKey];
-            [newDict setObject:@"Feb URL GOES HERE" forKey:topicURLKey];
-            break;
+        
+    }else{ //individualORTeam = TEAM
+        
+        keyString = topTeamNameKey;
+        
+        if (monthORAllTime == MONTHLY){
+            dict = [_topTeamsMonthly objectAtIndex:arrayPosition];
+            
+        }else{//monthORAllTime = ALLTIME
+            dict = [_topTeamsAllTime objectAtIndex:arrayPosition];
         }
-        case (MAR):
-        {
-            [newDict setObject:@"3" forKey:monthNumberKey];
-            [newDict setObject:@"30" forKey:topicIDKey];
-            [newDict setObject:@"Green Products" forKey:topicStringKey];
-            [newDict setObject:@"Mar URL GOES HERE" forKey:topicURLKey];
-            break;
-        }
-        case (APR):
-        {
-            [newDict setObject:@"4" forKey:monthNumberKey];
-            [newDict setObject:@"40" forKey:topicIDKey];
-            [newDict setObject:@"Earth Day - Enjoy the Trees" forKey:topicStringKey];
-            [newDict setObject:@"Apr URL GOES HERE" forKey:topicURLKey];
-            break;
-        }
-        case (MAY):
-        {
-            [newDict setObject:@"5" forKey:monthNumberKey];
-            [newDict setObject:@"50" forKey:topicIDKey];
-            [newDict setObject:@"Water" forKey:topicStringKey];
-            [newDict setObject:@"May URL GOES HERE" forKey:topicURLKey];
-            break;
-        }
-        case (JUN):
-        {
-            [newDict setObject:@"6" forKey:monthNumberKey];
-            [newDict setObject:@"60" forKey:topicIDKey];
-            [newDict setObject:@"Power Down for Summer" forKey:topicStringKey];
-            [newDict setObject:@"Jun URL GOES HERE" forKey:topicURLKey];
-            break;
-        }
-        case (JUL):
-        {
-            [newDict setObject:@"7" forKey:monthNumberKey];
-            [newDict setObject:@"70" forKey:topicIDKey];
-            [newDict setObject:@"Air Quality" forKey:topicStringKey];
-            [newDict setObject:@"Jul URL GOES HERE" forKey:topicURLKey];
-            break;
-        }
-        case (AUG):
-        {
-            [newDict setObject:@"8" forKey:monthNumberKey];
-            [newDict setObject:@"80" forKey:topicIDKey];
-            [newDict setObject:@"Green Communities and Businesses" forKey:topicStringKey];
-            [newDict setObject:@"Aug URL GOES HERE" forKey:topicURLKey];
-            break;
-        }
-        case (SEP):
-        {
-            [newDict setObject:@"9" forKey:monthNumberKey];
-            [newDict setObject:@"80" forKey:topicIDKey];
-            [newDict setObject:@"Idle Free & Transportation" forKey:topicStringKey];
-            [newDict setObject:@"Sep URL GOES HERE" forKey:topicURLKey];
-            break;
-        }
-        case (OCT):
-        {
-            [newDict setObject:@"10" forKey:monthNumberKey];
-            [newDict setObject:@"100" forKey:topicIDKey];
-            [newDict setObject:@"Food for Thought" forKey:topicStringKey];
-            [newDict setObject:@"Oct URL GOES HERE" forKey:topicURLKey];
-            break;
-        }
-        case (NOV):
-        {
-            [newDict setObject:@"11" forKey:monthNumberKey];
-            [newDict setObject:@"110" forKey:topicIDKey];
-            [newDict setObject:@"Recycling" forKey:topicStringKey];
-            [newDict setObject:@"Nov URL GOES HERE" forKey:topicURLKey];
-            break;
-        }
-        case (DEC):
-        {
-            [newDict setObject:@"12" forKey:monthNumberKey];
-            [newDict setObject:@"120" forKey:topicIDKey];
-            [newDict setObject:@"Winterize your Home" forKey:topicStringKey];
-            [newDict setObject:@"Dec URL GOES HERE" forKey:topicURLKey];
-            break;
-        }
-        default:
-        {
-            break;
-        }
-    }//end switch
+    }//end if
     
-    return newDict;
+    return [dict objectForKey:keyString];
     
+}//end getTopNames
+
+- (NSString*) getTopPoints:(int)individualORTeam monthORAllTime:(int)monthORAllTime arrayPosition:(int)arrayPosition
+{
+    NSMutableDictionary* dict;
     
-}//end getDictForMonth
+    if (individualORTeam == INDIVIDUAL)
+    {
+        if (monthORAllTime == MONTHLY){
+            dict = [_topUsersMonthly objectAtIndex:arrayPosition];
+        }else{//monthORAllTime = ALLTIME
+            dict = [_topUsersAllTime objectAtIndex:arrayPosition];
+        }
+        
+    }else{ //individualORTeam = TEAM
+        if (monthORAllTime == MONTHLY){
+            dict = [_topTeamsMonthly objectAtIndex:arrayPosition];
+            
+        }else{//monthORAllTime = ALLTIME
+            dict = [_topTeamsAllTime objectAtIndex:arrayPosition];
+        }
+    }//end if
+    
+    return [dict objectForKey:topPointsKey];
+    
+}//end getTopPoints
+
+
 
 
 @end

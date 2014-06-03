@@ -7,8 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "UUMainViewController.h"
-#import "UULoginViewController.h"
+#import "UUSplashViewController.h"
 #import "UUNavigationController.h"
 /*******
  *  Program notes:
@@ -56,9 +55,17 @@
  *     2.  Main View:  make arrows out of the cells
  *     3.  Main view:  add shadowing to text 
  *  
+ *
+ * 5/3/14 stopping point
+ *     1. have skeleton in place for "getchallengesforrtopic" in place but the server call back function needs to be finished
+ *     2. Need to re-think loading:  should I handle the user login stuff first, and then do all the server calls for info?  probably
+ *
  *     Login View:
  *     1.  find out why some logins are rejected after already registering them
- *     2.
+ *     2.  find out why back arrow shows up when login should be first on navigation stack
+ *
+ *     Main view:  
+ *     1.  find out why back arrow shows up when main should be first on navigation stack
  *
  *
  */
@@ -73,8 +80,7 @@
 {
     UUModel* _model;
     UUApplicationConstants* _appConstants;
-    UUMainViewController* _mainViewController;
-    UULoginViewController* _loginViewController;
+    UUSplashViewController* _splashViewController;
     
 }
 

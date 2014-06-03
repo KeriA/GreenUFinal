@@ -16,9 +16,6 @@
     // Override point for customization after application launch.
     self.window.backgroundColor = [UIColor blackColor]; //should never show - for testing
     
-    // SVProgressHUD is created as a singleton (i.e. it doesn't need to be explicitly allocated and instantiated; you directly call [SVProgressHUD <method>]).
-    [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeGradient];
-    
     // create the model so it can be passed into the controllers
     _model = [[UUModel alloc] init];
     
@@ -27,39 +24,15 @@
     float screenHeight = [[UIScreen mainScreen] bounds].size.height;        
     _appConstants = [[UUApplicationConstants alloc] initWithHeight:screenHeight];
     
-    /* At this point, we need to check that the user has already created a login.  If this is the case
-     * then locally (in the plist data) there will already be a key received from the server.  We then
-     * bring the user directly to the main menu.
-     * If a key does not exist, then we bring up the login view */
-    if (true)  // for testing
-    //if ([_model hasUserKey])
-    {
-        [SVProgressHUD dismiss];
-        _mainViewController = [[UUMainViewController alloc] initWithModel:_model andAppConstants:_appConstants];
-        UUNavigationController* mainNavigationController = [[UUNavigationController alloc] initWithAppConstants:_appConstants andRootViewController: _mainViewController];
-        
-        // make the mainNavigationController the root controller
-        [self.window setRootViewController: mainNavigationController];         
-        [self.window makeKeyAndVisible];
-        
-    }
-    else // no user key found, prompt the login screen
-    {
-        [SVProgressHUD dismiss];
-        _loginViewController = [[UULoginViewController alloc] initWithModel:_model andAppConstants:_appConstants];
-        
-        //The navigation controller gives the bar across the top
-        UUNavigationController* mainNavigationController = [[UUNavigationController alloc] initWithAppConstants:_appConstants andRootViewController: _loginViewController];
-        
-        // make the mainNavigationController the root controller
-        [self.window setRootViewController: mainNavigationController];
-        [self.window makeKeyAndVisible];
-
-    }
-
+    //load the splash view - this view will show while info from the server is retrieved
+    _splashViewController = [[UUSplashViewController alloc] initWithModel:_model andAppConstants:_appConstants];
+    UUNavigationController* mainNavigationController = [[UUNavigationController alloc] initWithAppConstants:_appConstants andRootViewController: _splashViewController];
     
-    
-    //[self.window makeKeyAndVisible];
+    // make the mainNavigationController the root controller
+    [self.window setRootViewController: mainNavigationController];
+    [self.window makeKeyAndVisible];
+
+
     return YES;
 }
 

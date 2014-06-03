@@ -76,7 +76,7 @@
     }
     [(UUProfileView*)self.view updateUserImage:userProfileImage andSelectedImage:userProfileImageSelected];
     NSString* userpassword = [_model getUserPassword];
-    int length = [userpassword length];
+    int length = (int)[userpassword length];
     
     NSString* maskedPassword = @"*";
     for (int i = 0; i < length - 1; i++)
@@ -159,7 +159,7 @@
     //update user info - send new pic to server
     
     [(UUProfileView*)self.view updateUserImage:resizedImage andSelectedImage: resizedImage];
-    [_model setUserProfileImage:resizedImage];
+    //[_model setUserProfileImage:resizedImage];
     
 }
 

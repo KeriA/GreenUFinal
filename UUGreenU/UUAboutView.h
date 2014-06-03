@@ -10,7 +10,10 @@
 
 @interface UUAboutView : UIView
 {
+
     UUApplicationConstants* _appConstants;
+
+    
 }
 
 - (id)initWithAppConstants:(UUApplicationConstants*)appConstants;

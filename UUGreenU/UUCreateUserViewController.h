@@ -9,7 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "UUCreateUserView.h"
 
-@interface UUCreateUserViewController : UIViewController<UUCreateUserViewDelegate, UURegisterParticipantDataReceivedDelegate>
+
+
+@interface UUCreateUserViewController : UIViewController<UUCreateUserViewDelegate ,UUModelForRegisterParticipantScreenDelegate>
 {
     UUModel* _model;
     UUApplicationConstants* _appConstants;

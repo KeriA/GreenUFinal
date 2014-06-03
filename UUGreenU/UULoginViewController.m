@@ -20,6 +20,7 @@
     NSString* _userPassword;
 }
 
+
 /***
  *
  *      Constructor:  create a weak reference to the model
@@ -35,9 +36,8 @@
         _model = model;
         _appConstants = appConstants;
         
-        
-        //set self as the delegate for participant login responses
-        [_model setParticipantLoginDataReceivedDelegate:self];
+        // set delegate to recieve responces from model
+        [_model setModelForLoginScreenDelegate:self];
         
     }
     return self;
@@ -63,6 +63,10 @@
     //UIViewController onto the navigation stack set the title of that UIViewController
     //to whatever is appropriate.
     self.title  = @"Login";
+    
+    //hide the 'back' button
+    self.navigationItem.leftBarButtonItem = nil;
+    self.navigationItem.hidesBackButton = YES;
     
 }
 
@@ -95,7 +99,8 @@
  ******************************************************************************************************/
 -(void) loginButtonWasPressed
 {
-    //NSLog(@"Login button was pressed\n"); //for testing
+    //resign the keyboard
+    [self.view endEditing:YES];
     
     // first test to see if information was correctly filled
     UITextField* emailTextField = (UITextField *)[self.view viewWithTag:emailTag];
@@ -104,7 +109,7 @@
     
     UITextField* passwordTextField = (UITextField *)[self.view viewWithTag:passwordTag];
     _userPassword = passwordTextField.text;
-    //NSLog(@"password text is %@\n", passwordString); // for testing
+    
     if ([self emailIsOK:_userEmail])
     {
         if ([self passwordIsOK:_userPassword])
@@ -112,14 +117,8 @@
             
             // SVProgressHUD is created as a singleton (i.e. it doesn't need to be explicitly allocated and instantiated; you directly call [SVProgressHUD <method>]).
             [SVProgressHUD showWithMaskType:SVProgressHUDMaskTypeGradient];
-
-            // create data dictionary and send it to the model
-            //NSLog(@"PASSWORD, EMAIL, and DISPLAY NAME ALL GOOD\n"); // for testing
-            NSArray* objects = [NSArray arrayWithObjects:_userEmail, _userPassword, nil];
-            NSArray* keys    = [NSArray arrayWithObjects:@"email", @"password", nil];
-            NSMutableDictionary* loginDictionary = [NSMutableDictionary dictionaryWithObjects:objects forKeys:keys];
             
-            [_model sendMessageToServer:participantLogin withDataDictionary:loginDictionary];
+            [_model loginFromLoginScreenWithEmail:_userEmail andPassword:_userPassword];
             
         }
         else //password not ok
@@ -153,6 +152,7 @@
     
     UUCreateUserViewController* createUserViewController = [[UUCreateUserViewController alloc] initWithModel:_model andAppConstants:_appConstants];
     [[self navigationController] setNavigationBarHidden:NO];
+    
     
     //title property is set in the 'view will appear' method of the 'createUserViewController'
     [[self navigationController] pushViewController:createUserViewController animated:TRUE];
@@ -320,95 +320,84 @@
 
 /**********************************************************************************************************
  *
- *                          Server Response Recieved
+ *                                  Server Callback functions
  *
  **********************************************************************************************************/
--(void) ParticipantLoginServerDataReceived:(int)responseCase
+
+- (void) loginFromLoginScreenServerDataReceived:(int)responseCase
 {
-    
     [SVProgressHUD dismiss];
     
-    // notes:
-    //   message values:
-    //  1000:  success:  participant successfully logged in
-    //  1011:  failure:  email does not exist in database
-    //  1012:  failure:  incorrect password
-    //  9999:  failure:  general failure
-    
+    //if we get here, login was unsuccessful
+    NSString* alertMessage;
+        
+        
     switch (responseCase)
     {
-        case 1000: //sucessful register
+        case NETWORKERROR:
         {
-            //store the user's email name and password
-            [_model storeEmail:_userEmail andPassword:_userPassword];
-            
-            
-            UUMainViewController* mainViewController = [[UUMainViewController alloc] initWithModel:_model andAppConstants:_appConstants];
-            
-            
-            //This method will replace the whole view controller stack inside the navigation controller.
-            //The "old" controllers get released. The stack array begins with the root controller and its
-            //last element is the topmost view controller.
-            [self.navigationController setViewControllers: [NSArray arrayWithObject: mainViewController]
-                                                 animated: YES];
+            alertMessage = @"Server Unavailable.  Please check your connection or try again later.";
             break;
         }
         case 1001:  // invalid email format
         {
-            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:@"Please enter a valid email format." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
-            [alert show];
-            //  [alert release];
-            //[[self getView] updateErrorMessage:invalidEmailString];
-            //set the focus to the email field
-            UITextField* emailTextField = (UITextField *)[self.view viewWithTag:emailTag];
-            [emailTextField becomeFirstResponder];
-            
-            
+            alertMessage = @"Please enter a valid email format.";
             break;
         }
-        case 1004: // login failure    !!!!!!!!!this needs to be taken out!!!!!!
+        case 1004:  //login failure
         {
-            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:@"Either an incorrect email or password was entered.  Please check your email address and password and try again." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
-            [alert show];
-            //set the focus to the password field
-            UITextField* passwordTextField = (UITextField *)[self.view viewWithTag:passwordTag];
-            [passwordTextField becomeFirstResponder];
-            
-            
+            alertMessage = @"Either an incorrect email or password was entered.  Please check your email address and password and try again.";
             break;
-            
         }
-        case 1005: // login failure
+        default:
         {
-            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:@"Either an incorrect email or password was entered.  Please check your email address and password and try again." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
-            [alert show];
-            //set the focus to the password field
-            UITextField* passwordTextField = (UITextField *)[self.view viewWithTag:passwordTag];
-            [passwordTextField becomeFirstResponder];
-            
-            
+            alertMessage = @"Either an incorrect email or password was entered.  Please check your email address and password and try again.";
             break;
-            
         }
-            
-        default: //general server error
-        {
-            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:@"Server Unavailable.  Please check your connection or try again later." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
-            [alert show];
-            //set focus to display name field
-            UITextField* emailTextField = (UITextField *)[self.view viewWithTag:emailTag];
-            [emailTextField becomeFirstResponder];
-            
-            break;
-            
-        }
-            
-            
+                
     }//end switch
     
+    //show the alert message
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"" message:alertMessage delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    [alert show];
+        
+    //set the focus back to the email field
+    UITextField* emailTextField = (UITextField*)[self.view viewWithTag:emailTag];
+    [emailTextField becomeFirstResponder];
     
-}//end registerParticipantServerDataRecieved
+    
+}//end startupDataReceived
 
+
+- (void) startupDataReceived:(int)responseCase
+{
+    [SVProgressHUD dismiss];
+    
+    switch (responseCase)
+    {
+        case SUCCESS:
+        {
+            // launch the main view
+            //This method will replace the whole view controller stack inside the navigation controller.
+            //The "old" controllers get released. The stack array begins with the root controller and its
+            //last element is the topmost view controller.
+            UUMainViewController* _mainViewController = [[UUMainViewController alloc] initWithModel:_model andAppConstants:_appConstants];
+            [self.navigationController setViewControllers: [NSArray arrayWithObject: _mainViewController] animated: YES];
+
+            break;
+        }
+        default:  //NETWORKERROR
+        {
+            NSString* alertMessage = @"Server Unavailable.  Please check your connection or try again later.";
+            
+            //show the alert message
+            UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"" message:alertMessage delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+            [alert show];
+            
+            break;
+        }
+    }//end switch
+}//end startupdata received
 
 /**********************************************************************************************************
 *
@@ -436,6 +425,8 @@
     
     return YES;
 }// end passwordISOK
+
+
 
 
 
