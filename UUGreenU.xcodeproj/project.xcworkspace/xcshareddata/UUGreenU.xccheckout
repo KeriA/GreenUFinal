@@ -5,36 +5,36 @@
 	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
 	<false/>
 	<key>IDESourceControlProjectIdentifier</key>
-	<string>492B040C-2705-4988-B25E-4337D908DBDE</string>
+	<string>4898D8F4-E71B-4649-81BF-FAB2E5BE1A38</string>
 	<key>IDESourceControlProjectName</key>
 	<string>UUGreenU</string>
 	<key>IDESourceControlProjectOriginsDictionary</key>
 	<dict>
-		<key>10414166-2D83-4A93-A0A4-AC2D3AD02BCF</key>
-		<string>https://github.com/KeriA/GreenU</string>
+		<key>970CDCF8-CCD8-430F-AB65-D9D164351961</key>
+		<string>https://github.com/KeriA/GreenUFinal.git</string>
 	</dict>
 	<key>IDESourceControlProjectPath</key>
 	<string>UUGreenU.xcodeproj/project.xcworkspace</string>
 	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
 	<dict>
-		<key>10414166-2D83-4A93-A0A4-AC2D3AD02BCF</key>
+		<key>970CDCF8-CCD8-430F-AB65-D9D164351961</key>
 		<string>../..</string>
 	</dict>
 	<key>IDESourceControlProjectURL</key>
-	<string>https://github.com/KeriA/GreenU</string>
+	<string>https://github.com/KeriA/GreenUFinal.git</string>
 	<key>IDESourceControlProjectVersion</key>
 	<integer>110</integer>
 	<key>IDESourceControlProjectWCCIdentifier</key>
-	<string>10414166-2D83-4A93-A0A4-AC2D3AD02BCF</string>
+	<string>970CDCF8-CCD8-430F-AB65-D9D164351961</string>
 	<key>IDESourceControlProjectWCConfigurations</key>
 	<array>
 		<dict>
 			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
 			<string>public.vcs.git</string>
 			<key>IDESourceControlWCCIdentifierKey</key>
-			<string>10414166-2D83-4A93-A0A4-AC2D3AD02BCF</string>
+			<string>970CDCF8-CCD8-430F-AB65-D9D164351961</string>
 			<key>IDESourceControlWCCName</key>
-			<string>UUGreenU</string>
+			<string>GreenUFinal</string>
 		</dict>
 	</array>
 </dict>
