@@ -91,8 +91,8 @@
         NSDictionary* underlineAttributeNormal = @{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSForegroundColorAttributeName: [_appConstants mustardYellowColor], NSFontAttributeName: [_appConstants getStandardFontWithSize:12]};
         NSAttributedString* attStringNormal = [[NSAttributedString alloc] initWithString:@"Change username" attributes:underlineAttributeNormal];
         [_changeUserNameButton setAttributedTitle:attStringNormal forState:UIControlStateNormal];
-        //_changeUserNameButton.titleLabel.textAlignment = NSTextAlignmentLeft;
-        [_changeUserNameButton.titleLabel setTextAlignment:NSTextAlignmentLeft];
+        [_changeUserNameButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+
         
         NSDictionary* underlineAttributeHighlighted = @{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSForegroundColorAttributeName: [_appConstants brightGreenColor], NSFontAttributeName: [_appConstants getStandardFontWithSize:12]};
         NSAttributedString* attStringHighlighted = [[NSAttributedString alloc] initWithString:@"Change username" attributes:underlineAttributeHighlighted];
@@ -128,6 +128,7 @@
         _pointsTextField.tag = pointsTag;  // used to identify this text field in the delegate methods
         _pointsTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
         _pointsTextField.layer.borderWidth = 0.0;
+        _pointsTextField.enabled = false;
 
         
         _rankLabel = [[UILabel alloc] init];
@@ -155,6 +156,7 @@
         _rankTextField.tag = pointsTag;  // used to identify this text field in the delegate methods
         _rankTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
         _rankTextField.layer.borderWidth = 0.0;
+        _rankTextField.enabled = false;
 
         
         _teamNameLabel = [[UILabel alloc] init];
@@ -196,7 +198,7 @@
         NSDictionary* teamUnderlineAttributeNormal = @{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSForegroundColorAttributeName: [_appConstants mustardYellowColor], NSFontAttributeName: [_appConstants getStandardFontWithSize:12]};
         NSAttributedString* teamAttStringNormal = [[NSAttributedString alloc] initWithString:@"Change team" attributes:teamUnderlineAttributeNormal];
         [_changeTeamButton setAttributedTitle:teamAttStringNormal forState:UIControlStateNormal];
-        _changeTeamButton.titleLabel.textAlignment = NSTextAlignmentLeft;
+        [_changeTeamButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         
         NSDictionary* teamUnderlineAttributeHighlighted = @{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSForegroundColorAttributeName: [_appConstants brightGreenColor], NSFontAttributeName: [_appConstants getStandardFontWithSize:12]};
         NSAttributedString* teamAttStringHighlihgted = [[NSAttributedString alloc] initWithString:@"Change team" attributes:teamUnderlineAttributeHighlighted];
@@ -251,6 +253,7 @@
         NSDictionary* passwordUnderlineAttributeNormal = @{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSForegroundColorAttributeName: [_appConstants mustardYellowColor], NSFontAttributeName: [_appConstants getStandardFontWithSize:12]};
         NSAttributedString* passwordAttStringNormal = [[NSAttributedString alloc] initWithString:@"Change password" attributes:passwordUnderlineAttributeNormal];
         [_changePasswordButton setAttributedTitle:passwordAttStringNormal forState:UIControlStateNormal];
+        [_changePasswordButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
         
         NSDictionary* passwordUnderlineAttributeHighlighted = @{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSForegroundColorAttributeName: [_appConstants brightGreenColor], NSFontAttributeName: [_appConstants getStandardFontWithSize:12]};
         NSAttributedString* passwordAttStringHighlihgted = [[NSAttributedString alloc] initWithString:@"Change password" attributes:passwordUnderlineAttributeHighlighted];
