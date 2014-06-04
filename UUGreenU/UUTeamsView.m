@@ -39,8 +39,8 @@
     UIPickerView* _businessPickerView;
     UIPickerView* _otherPickerView;
     UIToolbar*    _pickerToolBar;
-    UIBarButtonItem* _pickerDoneButton;
-    UIBarButtonItem* _joinTeamButton;
+    UIButton*     _doneButton;
+    UIButton*     _selectTeamButton;
     
     CGRect _pickerFrameSchoolShow;
     CGRect _pickerFrameBusinessShow;
@@ -280,13 +280,30 @@
         _pickerViewFrameView.backgroundColor = [UIColor colorWithPatternImage: [_appConstants getBackgroundImage]]; //semi-transparent black
         
         _pickerToolBar = [[UIToolbar alloc]init];
-        _pickerToolBar.tintColor = [_appConstants mustardYellowColor];  //text color
+        _pickerToolBar.tintColor = [UIColor whiteColor];  //text color
         _pickerToolBar.barTintColor = [UIColor blackColor];  //background color
-        _joinTeamButton = [[UIBarButtonItem alloc]initWithTitle:@"Join Team" style:UIBarButtonItemStyleBordered target:teamsViewDelegate action:@selector(joinTeamButtonWasPressed)];
-        _pickerDoneButton = [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleBordered target:teamsViewDelegate action:@selector(pickerDoneButtonWasPressed)];
+        
+        _doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_doneButton setFrame:CGRectMake(0.0, 0.0, 45.0, 25.0)];
+        [_doneButton addTarget:teamsViewDelegate action:@selector(pickerDoneButtonWasPressed) forControlEvents:UIControlEventTouchUpInside];
+        [_doneButton setBackgroundImage:[_appConstants getPickerDoneImage] forState:UIControlStateNormal];
+        [_doneButton setTitle:@"Done" forState:UIControlStateNormal];
+        [_doneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_doneButton.titleLabel setFont:[_appConstants getBoldFontWithSize:15.0]];
+        UIBarButtonItem* doneItem = [[UIBarButtonItem alloc] initWithCustomView:_doneButton];
+        
+        _selectTeamButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [_selectTeamButton setFrame:CGRectMake(0.0, 0.0, 90.0, 25.0)];
+        [_selectTeamButton addTarget:teamsViewDelegate action:@selector(joinTeamButtonWasPressed) forControlEvents:UIControlEventTouchUpInside];
+        [_selectTeamButton setBackgroundColor:[UIColor clearColor]];
+        [_selectTeamButton setTitle:@"Select team" forState:UIControlStateNormal];
+        [_selectTeamButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+        [_selectTeamButton .titleLabel setFont:[_appConstants getItalicsFontWithSize:15.0]];
+        UIBarButtonItem* selectItem = [[UIBarButtonItem alloc] initWithCustomView:_selectTeamButton];
+
         //this button item is used only to force the 'done' button to the right side
         UIBarButtonItem* flexibleSpaceLeft = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-        NSArray* items = [[NSArray alloc]initWithObjects:_joinTeamButton, flexibleSpaceLeft, _pickerDoneButton, nil];
+        NSArray* items = [[NSArray alloc]initWithObjects:selectItem, flexibleSpaceLeft, doneItem, nil];
         [_pickerToolBar setItems:items];
         
         _schoolPickerView = [[UIPickerView alloc] init];
@@ -614,59 +631,83 @@
 }
 
 
-- (void) enableTeamsButtons
+- (void) disableSchoolsButton
+{
+    _schoolButton.enabled = false;
+    [_schoolButton setBackgroundColor:[UIColor clearColor]];
+    [_schoolButton setBackgroundImage:[_appConstants getNonActiveTeamsImageRed] forState:UIControlStateDisabled];
+    [self setNeedsDisplay];
+   
+}
+
+- (void) enableSchoolsButton
 {
     _schoolButton.enabled = true;
-    _businessButton.enabled = true;
-    _otherButton.enabled = true;
-    [_schoolButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [_businessButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [_otherButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [_schoolButton setBackgroundColor:[_appConstants cherryRedColor]];
-    [_businessButton setBackgroundColor:[_appConstants mustardYellowColor]];
-    [_otherButton setBackgroundColor:[_appConstants brightGreenColor]];
+    [self setNeedsDisplay];
+}
 
+- (void) disableBusinessButton
+{
+    _businessButton.enabled = false;
+    [_businessButton setBackgroundColor:[UIColor clearColor]];
+    [_businessButton setBackgroundImage:[_appConstants getNonActiveTeamsImageYellow] forState:UIControlStateDisabled];
+    [self setNeedsDisplay];
+    
+}
+
+- (void) enableBusinessButton
+{
+    _businessButton.enabled = true;
+    [_businessButton setBackgroundColor:[_appConstants mustardYellowColor]];
+    [self setNeedsDisplay];
+}
+
+
+- (void) disableOtherButton
+{
+    _otherButton.enabled = false;
+    [_otherButton setBackgroundColor:[UIColor clearColor]];
+    [_otherButton setBackgroundImage:[_appConstants getNonActiveTeamsImageGreen] forState:UIControlStateDisabled];
+    [self setNeedsDisplay];
+    
+}
+
+- (void) enableOtherButton
+{
+    _otherButton.enabled = true;
+    [_otherButton setBackgroundColor:[_appConstants brightGreenColor]];
+    [self setNeedsDisplay];
+}
+
+- (void) enableLowerButtons
+{
+   
     _requestNewTeamButton.enabled = true;
     [_requestNewTeamButton setBackgroundColor:[_appConstants cherryRedColor]];
     [_requestNewTeamButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [_categoryLabel setTextColor:[UIColor whiteColor]];
-    [_schoolLabel setTextColor:[UIColor whiteColor]];
-    [_businessLabel setTextColor:[UIColor whiteColor]];
-    [_otherLabel setTextColor:[UIColor whiteColor]];
     
+    _newTeamTextField.enabled = true;
     _newTeamSchoolButton.enabled = true;
     _newTeamBusinessButton.enabled = true;
     _newTeamOtherButton.enabled = true;
     
-    
     [self setNeedsDisplay];
 }
 
-- (void) disableTeamsButtons
+- (void) disableLowerButtons
 {
-    _schoolButton.enabled = false;
-    _businessButton.enabled = false;
-    _otherButton.enabled = false;
-    [_schoolButton setTitleColor:_darkGrayColor forState:UIControlStateNormal];
-    [_businessButton setTitleColor:_darkGrayColor forState:UIControlStateNormal];
-    [_otherButton setTitleColor:_darkGrayColor forState:UIControlStateNormal];
-    [_schoolButton setBackgroundColor:[_appConstants cherryRedColorFaded]];
-    [_businessButton setBackgroundColor:[_appConstants mustardYellowColorFaded]];
-    [_otherButton setBackgroundColor:[_appConstants brightGreenColorFaded]];
     
     _requestNewTeamButton.enabled = false;
-    [_requestNewTeamButton setBackgroundColor:[_appConstants cherryRedColorFaded]];
-    [_requestNewTeamButton setTitleColor:_darkGrayColor forState:UIControlStateNormal];
-    [_categoryLabel setTextColor:_darkGrayColor];
-    [_schoolLabel setTextColor:_darkGrayColor];
-    [_businessLabel setTextColor:_darkGrayColor];
-    [_otherLabel setTextColor:_darkGrayColor];
+    [_requestNewTeamButton setBackgroundColor:[UIColor clearColor]];
+    [_requestNewTeamButton setTitleColor:[UIColor blackColor] forState:UIControlStateDisabled];
+    [_requestNewTeamButton setBackgroundImage:[_appConstants getNonActiveTeamsImageRed] forState:UIControlStateDisabled];
     
+    _newTeamTextField.enabled = false;
     _newTeamSchoolButton.enabled = false;
     _newTeamBusinessButton.enabled = false;
     _newTeamOtherButton.enabled = false;
 
-    
     [self setNeedsDisplay];
 }
 
@@ -680,7 +721,7 @@
     
     [UIView beginAnimations:nil context: nil];
     [UIView setAnimationDuration:0.3];
-    [UIView setAnimationDelay:0.1];
+    [UIView setAnimationDelay:0.0];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseIn];
     
     if (atLocation == 1) //school
@@ -698,7 +739,7 @@
 {
     [UIView beginAnimations:nil context: nil];
     [UIView setAnimationDuration:0.3];
-    [UIView setAnimationDelay:0.1];
+    [UIView setAnimationDelay:0.0];
     [UIView setAnimationCurve:UIViewAnimationCurveEaseOut];
     
     _pickerViewFrameView.frame = _pickerFrameHide;

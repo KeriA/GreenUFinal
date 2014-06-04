@@ -48,8 +48,17 @@
 - (void) setOtherButtonPressedResults;
 - (void) setCurrentTeam:(NSString*)currentTeam;
 
-- (void) enableTeamsButtons;
-- (void) disableTeamsButtons;
+- (void) disableSchoolsButton;
+- (void) enableSchoolsButton;
+- (void) disableBusinessButton;
+- (void) enableBusinessButton;
+- (void) disableOtherButton;
+- (void) enableOtherButton;
+- (void) enableLowerButtons;
+- (void) disableLowerButtons;
+
+
+
 
 - (void) resetTextFieldColor;
 

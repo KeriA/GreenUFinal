@@ -114,6 +114,7 @@
 #define STARTUP 1
 #define UPDATE 2
 
+
 #define SUN 0
 #define MON 1
 #define TUE 2
@@ -133,7 +134,7 @@
  *  call back methods for when the app received server response
  */
 
-// Startup Server Calls
+// UUModel listens to these calls
 @protocol UUSessionDelegate
 @required
 - (void) loginResponseReceived:(int)responseCase andUserID:(int)userID andCallType:(int)callType;
@@ -141,7 +142,16 @@
 - (void) startupCallsDataReceived:(int)responseCase withCallType:(int)callType;
 - (void) newTeamRequestResponseReceived:(int)responseCase;
 - (void) changeTeamFromTeamsPageResponseReceived:(int)responseCase andTeamID:(NSString*)teamID andAllTimeRank:(int)allTimeRank andMonthRank:(int)monthRank andAllTimePoint:(int)allTimepoint andMonthPoint:(int)monthPoint;
-- (void) updateUserPointsForChallengeResponseReceivedWithDateArray:(NSArray*)dateArray andTopicsArrayLocation:(int)arrayLocation andChallengeNumber:(int)challengeNumber andNetworkError:(BOOL)networkError;
+//for updating points for the app
+- (void) updateUserPointsForChallengeWithDateArray:(NSArray*)dateArray andTopicsArrayLocation:(int)arrayLocation andChallengeNumber:(int)challengeNumber;
+- (void) updateUserPoints:(int)points andRank:(int)rank;
+- (void) updateTopTeamsCurrentMonth:(NSMutableArray*)monthTeams;
+- (void) updateTopTeamsAllTime:(NSMutableArray*)allTimeTeams;
+- (void) updateTopIndividualsCurrentMonth:(NSMutableArray*)monthIndividuals;
+- (void) updateTopIndividualsAllTime:(NSMutableArray*)allTimeIndividuals;
+- (void) updateCallsCompleteWithError:(BOOL)error;
+
+- (void) requestPasswordResponseReceived:(int)responseCase;
 @end
 
 
@@ -154,6 +164,7 @@
 - (void) loginWithEmail:(NSString*)email andPassword:(NSString*)password andType:(int)type;
 - (void) launchServerStartupFunctionsWithUserID:(NSString*)userID andCallType:(int)type;
 - (void) registerNewParticipantWithEmail:(NSString*)email andPassword:(NSString*)password andUserName:(NSString*)username;
+- (void) requestUserPassword:(NSString*)userEmail;
 
 //new Team Request
 - (void) requestNemTeam:(NSString*)teamName andType:(NSString*)teamType andUserId:(NSString*)userID;

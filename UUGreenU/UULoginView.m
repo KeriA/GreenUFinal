@@ -15,6 +15,7 @@
     UILabel*     _orLabel;
     UITextField* _emailTextField;
     UITextField* _passwordTextField;
+    UIButton*    _forgotPasswordButton;
     UIButton*    _loginButton;
     UIButton*    _loginWithFBButton;
     UIButton*    _signUpButton;
@@ -89,44 +90,59 @@
         _passwordTextField.tag = passwordTag; // used to identify this text field in the delegate methods
         _passwordTextField.autocapitalizationType = UITextAutocapitalizationTypeNone;
         _passwordTextField.layer.borderWidth = 0.0;
-        //[_passwordTextField setDelegate:signInTextFieldDelegate]; // could not get code to work
         
-        
-        // create the buttons and their methods
-        // important note:  When using custom fonts, it turns out that often these fonts do not have
-        //                  what is called the 'ascender property' set correctly, resulting in
-        //                  text being displayed too high, or off vertical center.
-        //                  Rather than mess with the font file directly (which can be done, but I'll
-        //                  dodge that bullet if I can), a quick and dirty fix is to play around
-        //                  with the 'contentEdgeInsets' settings, and just shove the whole text down
-        //                  a bit.  This seemed to work well.
-        //   UPdate:  switched back to system font - it just looked better.
-        
-        _loginButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        _forgotPasswordButton = [UIButton buttonWithType:UIButtonTypeCustom];
         // set the text properties
+        _signUpButton.backgroundColor = [UIColor clearColor];
+        CALayer* forgotLayer = [_forgotPasswordButton layer];
+        [forgotLayer setMasksToBounds:YES];
+        [forgotLayer setCornerRadius: 6.0];
+        [forgotLayer setBorderWidth: 0.0];// we want this button to look like a link, so no border
+        [forgotLayer setBorderColor:[UIColor clearColor].CGColor];
+        // This button needs to look like a link - with underlined text - use NSAttributed String
+        NSDictionary* underlineAttributeNormalForgot = @{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSForegroundColorAttributeName: [_appConstants mustardYellowColor], NSFontAttributeName: [_appConstants getStandardFontWithSize:16]};
+        NSAttributedString* attStringNormalForgot = [[NSAttributedString alloc] initWithString:@"Forgot Password?" attributes:underlineAttributeNormalForgot];
+        [_forgotPasswordButton setAttributedTitle:attStringNormalForgot forState:UIControlStateNormal];
+        NSDictionary* underlineAttributeHighlightedForgot = @{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSForegroundColorAttributeName: [_appConstants brightGreenColor], NSFontAttributeName: [_appConstants getStandardFontWithSize:16]};
+        NSAttributedString* attStringHighlihgtedForgot = [[NSAttributedString alloc] initWithString:@"Forgot Password?" attributes:underlineAttributeHighlightedForgot];
+        [_forgotPasswordButton setAttributedTitle:attStringHighlihgtedForgot forState:UIControlStateHighlighted];
+        // set the delegate for the button to be the SignInViewControllers
+        [_forgotPasswordButton addTarget: loginViewDelegate
+                          action:@selector(forgotPasswordButtonWasPressed)
+                forControlEvents:UIControlEventTouchDown];
+
+        
+        // rounded rect button
+        _loginButton = [[UIButton alloc]init];
+        _loginButton.layer.borderWidth = .06f; // these two lines
+        _loginButton.layer.cornerRadius = 6;   // round the corners
         [_loginButton setTitle:@"Log In" forState:UIControlStateNormal];
-        [_loginButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [_loginButton setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
-        //[_loginButton setEnabled:FALSE];
-        [_loginButton.titleLabel setFont:[_appConstants getBoldFontWithSize:20.0]];
-        //_loginButton.contentEdgeInsets = UIEdgeInsetsMake(10.0, 0.0, 0.0, 0.0);  // see 'important note' above
-        // set the delegate for the button to be the SignInViewController
+        [_loginButton setBackgroundColor:[_appConstants cherryRedColor]];
+        [_loginButton.titleLabel setFont:[_appConstants getBoldFontWithSize:18.0]];
+        [_loginButton.titleLabel setTextColor:[UIColor whiteColor]];
         [_loginButton addTarget: loginViewDelegate
-                         action:@selector(loginButtonWasPressed)
-               forControlEvents:UIControlEventTouchDown];
+                                  action:@selector(loginButtonWasPressed)
+                        forControlEvents:UIControlEventTouchDown];
         
-        _loginWithFBButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        // set the text properties
+        // rounded rect button
+        _loginWithFBButton = [[UIButton alloc]init];
+         _loginWithFBButton.layer.borderWidth = .06f; // these two lines
+         _loginWithFBButton.layer.cornerRadius = 6;   // round the corners
         [_loginWithFBButton setTitle:@"Log In with FB" forState:UIControlStateNormal];
-        [_loginWithFBButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-        [_loginWithFBButton.titleLabel setFont:[_appConstants getBoldFontWithSize:20.0]];
-        //_loginWithFBButton.contentEdgeInsets = UIEdgeInsetsMake(10.0, 0.0, 0.0, 0.0);  // see 'important note' above
-        // set the delegate for the button to be the SignInViewController
+        [_loginWithFBButton setBackgroundColor:[_appConstants cherryRedColor]];
+        [_loginWithFBButton.titleLabel setFont:[_appConstants getBoldFontWithSize:18.0]];
+        [_loginWithFBButton.titleLabel setTextColor:[UIColor whiteColor]];
+        [_loginWithFBButton setImage:[UIImage imageNamed:@"FacebookIconSmall.png"] forState:UIControlStateNormal];
+        [_loginWithFBButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+        [_loginWithFBButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
+        //_loginWithFBButton.imageEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, 0.0, 50.0);
+        _loginWithFBButton.titleEdgeInsets = UIEdgeInsetsMake(0, 25.0, 0, 0);
         [_loginWithFBButton addTarget: loginViewDelegate
-                               action:@selector(faceBookLoginButtonWasPressed)
-                     forControlEvents:UIControlEventTouchDown];
+                         action:@selector(faceBookLoginButtonWasPressed)
+               forControlEvents:UIControlEventTouchDown];
+
         
-        _signUpButton = [UIButton buttonWithType:UIButtonTypeCustom];
+         _signUpButton = [UIButton buttonWithType:UIButtonTypeCustom];
         // set the text properties
         _signUpButton.backgroundColor = [UIColor clearColor];
         CALayer* theLayer = [_signUpButton layer];
@@ -135,7 +151,7 @@
         [theLayer setBorderWidth: 0.0];// we want this button to look like a link, so no border
         [theLayer setBorderColor:[UIColor clearColor].CGColor];
         // This button needs to look like a link - with underlined text - use NSAttributed String
-        NSDictionary* underlineAttributeNormal = @{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSForegroundColorAttributeName: [UIColor whiteColor], NSFontAttributeName: [_appConstants getStandardFontWithSize:16]};
+        NSDictionary* underlineAttributeNormal = @{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSForegroundColorAttributeName: [_appConstants mustardYellowColor], NSFontAttributeName: [_appConstants getStandardFontWithSize:16]};
         NSAttributedString* attStringNormal = [[NSAttributedString alloc] initWithString:@"Sign Up for greenU" attributes:underlineAttributeNormal];
         [_signUpButton setAttributedTitle:attStringNormal forState:UIControlStateNormal];
         
@@ -148,11 +164,11 @@
                 forControlEvents:UIControlEventTouchDown];
         
         // add the subviews
-        //[self addSubview:_greenULabel];
         [self addSubview:_greenUImageView];
         [self addSubview:_orLabel];
         [self addSubview:_emailTextField];
         [self addSubview:_passwordTextField];
+        [self addSubview:_forgotPasswordButton];
         [self addSubview:_loginButton];
         [self addSubview:_loginWithFBButton];
         [self addSubview:_signUpButton];
@@ -176,6 +192,7 @@
     CGRect orLabelRect;
     CGRect emailTextFieldRect;
     CGRect passwordTextFieldRect;
+    CGRect forgotButtonRect;
     CGRect logInButtonRect;
     CGRect logInWithFBButtonRect;
     CGRect signUpButtonRect;
@@ -205,7 +222,7 @@
     
     // divide the screen into 4 sections
     CGRect toplabelRect;    // this will hold the greenU label
-    CGRect textFieldsRect;   // hold the text fields
+    CGRect textFieldsRect;   // hold the text fields and forgot password button
     CGRect buttonsRect;      // holds the login and FB buttons
     CGRect signUpRect; // this will hold the sign up button
     
@@ -213,29 +230,42 @@
     // original rect, 1st slice,      remainder,   how much to put in slice, which edge to measure from
     CGRectDivide(bounds, &toplabelRect, &textFieldsRect, bounds.size.height/ 4.0, CGRectMinYEdge);
     
-    CGRectDivide(textFieldsRect, &textFieldsRect, &buttonsRect, textFieldsRect.size.height / 4.0, CGRectMinYEdge);
+    CGRectDivide(textFieldsRect, &textFieldsRect, &buttonsRect, textFieldsRect.size.height / 2.0, CGRectMinYEdge);
     CGRectDivide(buttonsRect, &signUpRect, &buttonsRect, buttonsRect.size.height / 4.0, CGRectMaxYEdge);
     
     
     // divide the textfields and buttons rects
-    CGRectDivide(textFieldsRect, &emailTextFieldRect, &passwordTextFieldRect, textFieldsRect.size.height/2.0, CGRectMinYEdge);
+    CGRectDivide(textFieldsRect, &emailTextFieldRect, &forgotButtonRect, textFieldsRect.size.height/1.5, CGRectMinYEdge);
+    CGRectDivide(emailTextFieldRect, &emailTextFieldRect, &passwordTextFieldRect, emailTextFieldRect.size.height/2.0, CGRectMinYEdge);
+    // shorten the height of the text fields a bit
+    emailTextFieldRect = CGRectInset(emailTextFieldRect, 0, emailTextFieldRect.size.height * .10);
+    passwordTextFieldRect = CGRectInset(passwordTextFieldRect, 0, passwordTextFieldRect.size.height * .10);
+
+    //buttonsRect = CGRectInset(buttonsRect, 0, buttonsRect.size.height * 0.15);
+
+    
+   // CGRectDivide(textFieldsRect, &emailTextFieldRect, &passwordTextFieldRect, textFieldsRect.size.height/2.0, CGRectMinYEdge);
+   //CGRectDivide(passwordTextFieldRect, &passwordTextFieldRect, &forgotButtonRect, passwordTextFieldRect.size.height / 2.0, CGRectMinYEdge);
+    
+    
     // first, inset the buttons rect to give a bit of distance from the text fields
-    buttonsRect = CGRectInset(buttonsRect, 0, buttonsRect.size.height * 0.15);
+    //buttonsRect = CGRectInset(buttonsRect, 0, buttonsRect.size.height * 0.15);
     // divide the buttons rect into a top log in button, a small 'or' label, and a bottom fBLoginbutton
     CGRectDivide(buttonsRect, &logInButtonRect, &orLabelRect, (buttonsRect.size.height/7.0)*3.0, CGRectMinYEdge);
     CGRectDivide(orLabelRect, &orLabelRect, &logInWithFBButtonRect, orLabelRect.size.height/4.0, CGRectMinYEdge);
     
     
-    //NSLog(@"KERI!!! the dimensions are height:  %f and width:  %f", logInWithFBButtonRect.size.height, logInWithFBButtonRect.size.width);
     // now give a bit more vertical inset to separate the buttons from each other
-    logInButtonRect = CGRectInset(logInButtonRect, 0, logInButtonRect.size.height * 0.10);
-    logInWithFBButtonRect = CGRectInset(logInWithFBButtonRect, 0, logInWithFBButtonRect.size.height * 0.10);
+    logInButtonRect = CGRectInset(logInButtonRect, 0, logInButtonRect.size.height * 0.13);
+    logInWithFBButtonRect = CGRectInset(logInWithFBButtonRect, 0, logInWithFBButtonRect.size.height * 0.13);
     
     // we want the the greenU logo to sit right above the email field.
-    float logoWidth = emailTextFieldRect.size.width - 10.0; // inset it just a bit
-    float logoHeight = 80.0; // just assign the height
+    float logoWidth = emailTextFieldRect.size.width * .70; // inset a bit
+    //the orignal image is 228 wide by 71 height
+    float logoHeight = logoWidth * (71.0 / 228.0);
+    //float logoHeight = 80.0; // just assign the height
     // find the y value of the
-    float logoY = emailTextFieldRect.origin.y - logoHeight;
+    float logoY = emailTextFieldRect.origin.y - logoHeight - 10.0;
     float logoX = emailTextFieldRect.origin.x + 5.0;
     greenUImageRect = CGRectMake(logoX, logoY, logoWidth, logoHeight);
     
@@ -244,51 +274,14 @@
     signUpButtonRect = CGRectInset(signUpButtonRect, widthInset * 1.5, signUpButtonRect.size.height * .30);
     
     // set the frames
-    [_greenUImageView setFrame:greenUImageRect];
-    [_orLabel setFrame: orLabelRect];
-    [_emailTextField setFrame:emailTextFieldRect];
-    [_passwordTextField setFrame:passwordTextFieldRect];
-    [_loginButton setFrame:logInButtonRect];
-    [_loginWithFBButton setFrame:logInWithFBButtonRect];
-    [_signUpButton setFrame:signUpButtonRect];
-    
-    
-    // now that we have the frames, we need to customize the button background colors
-    UIImageView* fbIconImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"FacebookIconSmall.png"]];
-    // do a bit of math to center the facebook icon on the button
-    CGFloat fbButtonHeight = logInWithFBButtonRect.size.height;
-    // take a percentage of this height
-    CGFloat fbIconHeight = fbButtonHeight * .85;
-    // indent to the left just a bit (the x value), and center vertically (the y value)
-    CGRect fbIconRect = CGRectMake(5, (fbButtonHeight - fbIconHeight) / 2.0, fbIconHeight, fbIconHeight);
-    [fbIconImageView setFrame:fbIconRect];
-    
-    
-    [_loginWithFBButton setBackgroundImage:[[UIImage imageNamed:@"grayButton.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
-    [_loginWithFBButton setBackgroundImage:[[UIImage imageNamed:@"blueButton.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-    [_loginWithFBButton addSubview:fbIconImageView];
-    
-    [_loginButton setBackgroundImage:[[UIImage imageNamed:@"grayButton.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateNormal];
-    [_loginButton setBackgroundImage:[[UIImage imageNamed:@"blueButton.png"] stretchableImageWithLeftCapWidth:10.0 topCapHeight:0.0] forState:UIControlStateHighlighted];
-    
-    
-    /*
-     [_loginWithFBButton setBackgroundImage:[UIImage imageNamed:"grayButton.png"]   forState:UIControlStateNormal];
-     [_loginWithFBButton setBackgroundImage:buttonBackgroundPressed forState:UIControlStateSelected];
-     
-     [_loginWithFBButton addSubview:fbIconImageView];*/
-    
-    //[_loginWithFBButton setImage:[UIImage imageNamed:@"FacebookIconSmall.png"] forState:UIControlStateNormal];
-    // [_loginWithFBButton setTitleEdgeInsets:UIEdgeInsetsMake(10.0, 0.0, 0.0, 0.0)];
-    
-    
-    // log in button
-    
-    /*
-     UIImage* _loginImageNormal = [self imageFromColor:[UIColor greenColor] andCGRect:logInButtonRect];
-     UIImage* _loginImageSelected = [self imageFromColor:[UIColor blueColor] andCGRect:logInButtonRect];
-     [_loginButton setBackgroundImage:_loginImageNormal forState:UIControlStateNormal];
-     [_loginButton setBackgroundImage:_loginImageSelected forState:UIControlStateSelected];*/
+    [_greenUImageView      setFrame:greenUImageRect];
+    [_orLabel              setFrame: orLabelRect];
+    [_emailTextField       setFrame:emailTextFieldRect];
+    [_passwordTextField    setFrame:passwordTextFieldRect];
+    [_forgotPasswordButton setFrame:forgotButtonRect];
+    [_loginButton          setFrame:logInButtonRect];
+    [_loginWithFBButton    setFrame:logInWithFBButtonRect];
+    [_signUpButton         setFrame:signUpButtonRect];
     
     
 }// end layoutSubviews

@@ -207,6 +207,14 @@
 - (void) launchServerStartupFunctionsWithUserID:(NSString*)userID andCallType:(int)type
 {
     NSLog(@"Server Functions Now being called\n");
+    NSString* startupString = [NSString stringWithFormat:@"%d", STARTUP];
+    
+    //make sure data structures are empty
+    [_schoolArray removeAllObjects];
+    [_businessArray removeAllObjects];
+    [_otherArray removeAllObjects];
+    [_topicsArray removeAllObjects];
+    [_teamsByIdDict removeAllObjects];
     
     _loginCallType = type; //used to determine where to send the response to when finished:  login/splash/registerparticipant
     
@@ -216,6 +224,7 @@
     [userProfileDict setObject:userID forKey:userIDKey];
     [userProfileDict setObject:userProfileCallObject forKey:SERVERCALLOBJECTKEY];
     [userProfileDict setObject:@"YES" forKey:withImageKey];
+    [userProfileDict setObject:startupString forKey:startUpOrUpdateKey];
     [self addOrRemoveCountToStartupList:ADD withObject:userProfileCallObject];
     [self sendMessageToServer:getUserProfile withDataDictionary: userProfileDict];
     
@@ -232,6 +241,7 @@
     NSString* periodString = currentString;
     [topTeamsMonthDict setObject:periodString forKey:periodKey];
     [topTeamsMonthDict setObject:topTeamsMonthCallObject forKey: SERVERCALLOBJECTKEY];
+    [topTeamsMonthDict setObject:startupString forKey:startUpOrUpdateKey];
     [self addOrRemoveCountToStartupList:ADD withObject:topTeamsMonthCallObject];
     [self sendMessageToServer:getTopTenTeams withDataDictionary:topTeamsMonthDict];
     
@@ -240,6 +250,7 @@
     periodString = allTimeString;
     [topTeamsAllTimeDict setObject:periodString forKey:periodKey];
     [topTeamsAllTimeDict setObject:topTeamsAllTimeCallObject forKey: SERVERCALLOBJECTKEY];
+    [topTeamsAllTimeDict setObject:startupString forKey:startUpOrUpdateKey];
     [self addOrRemoveCountToStartupList:ADD withObject:topTeamsAllTimeCallObject];
     [self sendMessageToServer:getTopTenTeams withDataDictionary:topTeamsAllTimeDict];
     
@@ -248,6 +259,7 @@
     periodString = currentString;
     [topIndMonthDict setObject:periodString forKey:periodKey];
     [topIndMonthDict setObject:topIndMonthCallObject forKey: SERVERCALLOBJECTKEY];
+    [topIndMonthDict setObject:startupString forKey:startUpOrUpdateKey];
     [self addOrRemoveCountToStartupList:ADD withObject:topIndMonthCallObject];
     [self sendMessageToServer:getTopTenIndividuals withDataDictionary:topIndMonthDict];
     
@@ -256,6 +268,7 @@
     periodString = allTimeString;
     [topIndAllTimeDict setObject:periodString forKey:periodKey];
     [topIndAllTimeDict setObject:topIndAllTimeCallObject forKey: SERVERCALLOBJECTKEY];
+    [topIndAllTimeDict setObject:startupString forKey:startUpOrUpdateKey];
     [self addOrRemoveCountToStartupList:ADD withObject:topIndAllTimeCallObject];
     [self sendMessageToServer:getTopTenIndividuals withDataDictionary:topIndAllTimeDict];
 
@@ -326,6 +339,14 @@
     
 }//end updateUserPoints
 
+
+- (void) requestUserPassword:(NSString*)userEmail
+{
+    NSMutableDictionary* dict = [[NSMutableDictionary alloc] init];
+    [dict setObject:userEmail forKey:userEmailKey];
+    [self sendMessageToServer:forgotPassword withDataDictionary:dict];
+    
+}//endRequestUserPassword
 
 /******************************************************************************************************
  *
@@ -413,33 +434,112 @@
          }else{ //remove
              [_serverCallObjectArray removeObject:object];
         
-             if ([_serverCallObjectArray count] <= 0){ //all starup calls complete
+             if ([_serverCallObjectArray count] <= 0){ //all the dates have been submitted
                  
-                 //error or not get updated points data from the server
-                 //now we can get the user points for the challenges
-                 NSString* arrayLocationString = [NSString stringWithFormat:@"%d", arrayLocation];
-                 NSString* challengeNumberString = [NSString stringWithFormat:@"%d", challengeNumber];
-                 NSObject* challengeCallObject = [[NSObject alloc]init];  //not needed in this case
+                 //from here, we need to update the points for the app
+                 //1) update userpoints for challenge
+                 //2) update user total points and rank
+                 //3) update top teams and indiviuals
+                 
+                 
                  //the behavior of the return function is different depending on whether being called from startup or update
                  NSString* startupString = [NSString stringWithFormat:@"%d", UPDATE];
- 
+
+                 //1) userpoints for challenge
+                 NSString* arrayLocationString   = [NSString stringWithFormat:@"%d", arrayLocation];
+                 NSString* challengeNumberString = [NSString stringWithFormat:@"%d", challengeNumber];
+                 NSObject* challengeCallObject   = [[NSObject alloc]init];  //not needed in this case
                  NSMutableDictionary* challengeDict = [[NSMutableDictionary alloc] init];
- 
                  [challengeDict setObject:userID forKey:userIDKey];
                  [challengeDict setObject:challengeID forKey:challengeIDKey];
                  [challengeDict setObject:arrayLocationString forKey:TOPICARRAYLOCATIONKEY];
                  [challengeDict setObject:challengeNumberString forKey:challengeNoKey];
                  [challengeDict setObject:challengeCallObject forKey:SERVERCALLOBJECTKEY];
                  [challengeDict setObject:startupString forKey:startUpOrUpdateKey];
- 
+                 [self addOrRemoveFromUpdateAppPointsList:ADD withObject:challengeCallObject];
                  [self sendMessageToServer:getUserPointsForChallenge withDataDictionary:challengeDict];
                  
+                 //2)  user total points and rank
+                 NSObject* userProfileObject = [[NSObject alloc] init];
+                 NSMutableDictionary* profileDict = [[NSMutableDictionary alloc]init];
+                 [profileDict setObject:userID forKey:userIDKey];
+                 [profileDict setObject:userProfileObject forKey:SERVERCALLOBJECTKEY];
+                 [profileDict setObject:@"NO" forKey:withImageKey]; //don't need user profile at this point
+                 [profileDict setObject:startupString forKey:startUpOrUpdateKey];
+                 [self addOrRemoveFromUpdateAppPointsList:ADD withObject:userProfileObject];
+                 [self sendMessageToServer:getParticipantPointAndRank withDataDictionary:profileDict];
+                 
+                 //3)Top Teams and Individuals
+                 NSMutableDictionary* topTeamsMonthDict = [[NSMutableDictionary alloc] init];
+                 NSObject* topTeamsMonthCallObject = [[NSObject alloc] init];
+                 NSString* periodString = currentString;
+                 [topTeamsMonthDict setObject:periodString forKey:periodKey];
+                 [topTeamsMonthDict setObject:topTeamsMonthCallObject forKey: SERVERCALLOBJECTKEY];
+                 [topTeamsMonthDict setObject:startupString forKey:startUpOrUpdateKey];
+                 [self addOrRemoveFromUpdateAppPointsList:ADD withObject:topTeamsMonthCallObject];
+                 [self sendMessageToServer:getTopTenTeams withDataDictionary:topTeamsMonthDict];
+                 
+                 NSMutableDictionary* topTeamsAllTimeDict = [[NSMutableDictionary alloc] init];
+                 NSObject* topTeamsAllTimeCallObject = [[NSObject alloc] init];
+                 periodString = allTimeString;
+                 [topTeamsAllTimeDict setObject:periodString forKey:periodKey];
+                 [topTeamsAllTimeDict setObject:topTeamsAllTimeCallObject forKey: SERVERCALLOBJECTKEY];
+                 [topTeamsAllTimeDict setObject:startupString forKey:startUpOrUpdateKey];
+                 [self addOrRemoveFromUpdateAppPointsList:ADD withObject:topTeamsAllTimeCallObject];
+                 [self sendMessageToServer:getTopTenTeams withDataDictionary:topTeamsAllTimeDict];
+                 
+                 NSMutableDictionary* topIndMonthDict = [[NSMutableDictionary alloc] init];
+                 NSObject* topIndMonthCallObject = [[NSObject alloc] init];
+                 periodString = currentString;
+                 [topIndMonthDict setObject:periodString forKey:periodKey];
+                 [topIndMonthDict setObject:topIndMonthCallObject forKey: SERVERCALLOBJECTKEY];
+                 [topIndMonthDict setObject:startupString forKey:startUpOrUpdateKey];
+                 [self addOrRemoveFromUpdateAppPointsList:ADD withObject:topIndMonthCallObject];
+                 [self sendMessageToServer:getTopTenIndividuals withDataDictionary:topIndMonthDict];
+                 
+                 NSMutableDictionary* topIndAllTimeDict = [[NSMutableDictionary alloc] init];
+                 NSObject* topIndAllTimeCallObject = [[NSObject alloc] init];
+                 periodString = allTimeString;
+                 [topIndAllTimeDict setObject:periodString forKey:periodKey];
+                 [topIndAllTimeDict setObject:topIndAllTimeCallObject forKey: SERVERCALLOBJECTKEY];
+                 [topIndAllTimeDict setObject:startupString forKey:startUpOrUpdateKey];
+                 [self addOrRemoveFromUpdateAppPointsList:ADD withObject:topIndAllTimeCallObject];
+                 [self sendMessageToServer:getTopTenIndividuals withDataDictionary:topIndAllTimeDict];
+
+                
              }//end if
          }
      }//end synchronized
  
  }//end addorRemoveStartupList
 
+
+/**
+ * This function keeps an array list
+ *  update points calls to the server
+ *  - for updating user points for the entire app
+ *
+ */
+- (void) addOrRemoveFromUpdateAppPointsList:(int)addOrRemove withObject:(NSObject*)object
+{
+    @synchronized(_serverCallObjectArray)
+    {
+        //we can safely modify this array one thread at a time
+        if (addOrRemove == ADD){
+            [_serverCallObjectArray addObject:object];
+        }else{ //remove
+            [_serverCallObjectArray removeObject:object];
+            
+            if ([_serverCallObjectArray count] <= 0){ //all starup calls complete - inform the model
+                
+                [[self sessionDelegate] updateCallsCompleteWithError:_netWorkErrorOccurred];
+                _netWorkErrorOccurred = false;
+                
+            }//end if
+        }
+    }//end synchronized
+    
+}//end addorRemoveStartupList
 
 /******************************************************************************************************
  *
@@ -556,7 +656,7 @@
             dataString = @"";
             break;
         }
-        /*case (forgotPassword):
+        case (forgotPassword):
         {
             methodString = [NSString stringWithFormat:@"%@", forgotPasswordRequest];
             action = POST;
@@ -565,7 +665,7 @@
             dataString = [NSString stringWithFormat:@"{ 'Email' : '%@' }", userEmailString];
             
             break;
-        }*/
+        }
         case (getAllTeams): //not used
         {
             break;
@@ -797,14 +897,15 @@
              {
                  NSObject* serverCallObject = [dataDictionary objectForKey:SERVERCALLOBJECTKEY];
                  NSString* withImageString = [dataDictionary objectForKey:withImageKey];
-                 [self responseForGetProfileReceived:data withError:error  andWithImage:withImageString andServerCallObject:serverCallObject];
+                 int startupOrUpdate = [[dataDictionary objectForKey:startUpOrUpdateKey]intValue];
+                 [self responseForGetProfileReceived:data withError:error  andWithImage:withImageString andServerCallObject:serverCallObject andStartupOrUpdate:startupOrUpdate];
                  break;
-             }/*
+             }
              case (forgotPassword):
              {
                  [self responseForForgotPasswordReceived:data withError:error];
                  break;
-             }
+             }/*
              case (getAllTeams):  //not used
              {
                  //[self responseForGetAllTeamsReceived:data withError:error];
@@ -870,21 +971,24 @@
              case (getParticipantPointAndRank):
              {
                  NSObject* serverCallObject = [dataDictionary objectForKey:SERVERCALLOBJECTKEY];
-                 [self responseForGetParticipantPointAndRankReceived:data withError:error andServerCallObject:serverCallObject];
+                 int startupOrUpdate = [[dataDictionary objectForKey:startUpOrUpdateKey]intValue];
+                 [self responseForGetParticipantPointAndRankReceived:data withError:error andServerCallObject:serverCallObject andStartupOrUpdate:startupOrUpdate];
                  break;
              }
              case (getTopTenTeams):
              {
                  NSObject* serverCallObject = [dataDictionary objectForKey:SERVERCALLOBJECTKEY];
                  NSString* periodString = [dataDictionary objectForKey:periodKey];
-                 [self responseforGetTopTenTeamsReceived:data withError:error andPeriod:periodString andServerCallObject:serverCallObject];
+                 int startupOrUpdate = [[dataDictionary objectForKey:startUpOrUpdateKey]intValue];
+                 [self responseforGetTopTenTeamsReceived:data withError:error andPeriod:periodString andServerCallObject:serverCallObject andStartupOrUpdate:startupOrUpdate];
                  break;
              }
              case (getTopTenIndividuals):
              {
                  NSObject* serverCallObject = [dataDictionary objectForKey:SERVERCALLOBJECTKEY];
                  NSString* periodString = [dataDictionary objectForKey:periodKey];
-                 [self responseforGetTopTenIndividualsReceived:data withError:error andPeriod:periodString andServerCallObject:serverCallObject];
+                 int startupOrUpdate = [[dataDictionary objectForKey:startUpOrUpdateKey]intValue];
+                 [self responseforGetTopTenIndividualsReceived:data withError:error andPeriod:periodString andServerCallObject:serverCallObject andStartupOrUpdate:startupOrUpdate];
                  break;
              }
                  
@@ -1025,7 +1129,7 @@
     
 }//end responseForUpdateUserProfile
 
-- (void) responseForGetProfileReceived:(NSData*)responseData withError:error andWithImage:(NSString*)withImage andServerCallObject:(NSObject*)serverCallObject
+- (void) responseForGetProfileReceived:(NSData*)responseData withError:error andWithImage:(NSString*)withImage andServerCallObject:(NSObject*)serverCallObject andStartupOrUpdate:(int) startupOrUpdate
 {
     int responseMessage = 0;
     
@@ -1049,12 +1153,14 @@
             NSString* userIDString = [NSString stringWithFormat:@"%d", userID];
             NSString* userName = [responseDictionary objectForKey:userNameKey];
             
+            
             //set the objects in the user profile dictionary
             [_userProfileDictionary setObject:email forKey:userEmailKey];
             [_userProfileDictionary setObject:password forKey:userPasswordKey];
             [_userProfileDictionary setObject:teamIDString forKey:teamIDKey];
             [_userProfileDictionary setObject:userIDString forKey:userIDKey];
             [_userProfileDictionary setObject:userName forKey:userNameKey];
+            
             
             
             if ([withImage isEqualToString:@"YES"])
@@ -1084,56 +1190,61 @@
         responseMessage = NETWORKERROR; // just set to general server error
     }
     
-    if (responseMessage != SUCCESS)
-    {
-        _netWorkErrorOccurred = true;
+    if (startupOrUpdate == STARTUP){
         
-    }else {
-        //get teams information
-        NSMutableDictionary* teamsSchoolDict = [[NSMutableDictionary alloc] init];
-        NSMutableDictionary* teamsBusinessDict = [[NSMutableDictionary alloc] init];
-        NSMutableDictionary* teamsOtherDict = [[NSMutableDictionary alloc] init];
-        NSObject* schoolCatObject = [[NSObject alloc]init];
-        NSObject* businessCatObject = [[NSObject alloc]init];
-        NSObject* otherCatObject = [[NSObject alloc]init];
+        if (responseMessage != SUCCESS)
+        {
+            _netWorkErrorOccurred = true;
         
-        [self addOrRemoveCountToStartupList:ADD withObject:schoolCatObject];
-        [self addOrRemoveCountToStartupList:ADD withObject:businessCatObject];
-        [self addOrRemoveCountToStartupList:ADD withObject:otherCatObject];
+        }else {
+            //get teams information
+            NSMutableDictionary* teamsSchoolDict = [[NSMutableDictionary alloc] init];
+            NSMutableDictionary* teamsBusinessDict = [[NSMutableDictionary alloc] init];
+            NSMutableDictionary* teamsOtherDict = [[NSMutableDictionary alloc] init];
+            NSObject* schoolCatObject = [[NSObject alloc]init];
+            NSObject* businessCatObject = [[NSObject alloc]init];
+            NSObject* otherCatObject = [[NSObject alloc]init];
         
-        [teamsSchoolDict setObject:schoolCatObject forKey:SERVERCALLOBJECTKEY];
-        [teamsSchoolDict setObject:SCHOOL forKey:teamCategoryKey];
+            [self addOrRemoveCountToStartupList:ADD withObject:schoolCatObject];
+            [self addOrRemoveCountToStartupList:ADD withObject:businessCatObject];
+            [self addOrRemoveCountToStartupList:ADD withObject:otherCatObject];
         
-        [teamsBusinessDict setObject:businessCatObject forKey:SERVERCALLOBJECTKEY];
-        [teamsBusinessDict setObject:BUSINESS forKey:teamCategoryKey];
+            [teamsSchoolDict setObject:schoolCatObject forKey:SERVERCALLOBJECTKEY];
+            [teamsSchoolDict setObject:SCHOOL forKey:teamCategoryKey];
         
-        [teamsOtherDict setObject:otherCatObject forKey:SERVERCALLOBJECTKEY];
-        [teamsOtherDict setObject:OTHER forKey:teamCategoryKey];
+            [teamsBusinessDict setObject:businessCatObject forKey:SERVERCALLOBJECTKEY];
+            [teamsBusinessDict setObject:BUSINESS forKey:teamCategoryKey];
         
-        [self sendMessageToServer:getTeamsByCategory withDataDictionary:teamsSchoolDict];
-        [self sendMessageToServer:getTeamsByCategory withDataDictionary:teamsBusinessDict];
-        [self sendMessageToServer:getTeamsByCategory withDataDictionary:teamsOtherDict];
+            [teamsOtherDict setObject:otherCatObject forKey:SERVERCALLOBJECTKEY];
+            [teamsOtherDict setObject:OTHER forKey:teamCategoryKey];
+        
+            [self sendMessageToServer:getTeamsByCategory withDataDictionary:teamsSchoolDict];
+            [self sendMessageToServer:getTeamsByCategory withDataDictionary:teamsBusinessDict];
+            [self sendMessageToServer:getTeamsByCategory withDataDictionary:teamsOtherDict];
         
         
-        //get user rank and points
-        NSString* userKeyString = [_userProfileDictionary objectForKey:userIDKey];
-        NSObject* userKeyServerObject = [[NSObject alloc]init];
-        [self addOrRemoveCountToStartupList:ADD withObject:userKeyServerObject];
-        NSMutableDictionary* userDict = [[NSMutableDictionary alloc] init];
-        [userDict setObject:userKeyString forKey:userIDKey];
-        [userDict setObject:userKeyServerObject forKey:SERVERCALLOBJECTKEY];
-        [self sendMessageToServer:getParticipantPointAndRank withDataDictionary:userDict];
+            //get user rank and points
+            NSString* userKeyString = [_userProfileDictionary objectForKey:userIDKey];
+            NSObject* userKeyServerObject = [[NSObject alloc]init];
+            [self addOrRemoveCountToStartupList:ADD withObject:userKeyServerObject];
+            NSMutableDictionary* userDict = [[NSMutableDictionary alloc] init];
+            NSString* startupString = [NSString stringWithFormat:@"%d", startupOrUpdate];
+            [userDict setObject:userKeyString forKey:userIDKey];
+            [userDict setObject:userKeyServerObject forKey:SERVERCALLOBJECTKEY];
+            [userDict setObject:startupString forKey:startUpOrUpdateKey];
+            [self sendMessageToServer:getParticipantPointAndRank withDataDictionary:userDict];
         
-    }
+        }
     
-    //take this call out of the startup data structure _serverCallArray
-    [self addOrRemoveCountToStartupList:REMOVE withObject:serverCallObject];
+        //take this call out of the startup data structure _serverCallArray
+        [self addOrRemoveCountToStartupList:REMOVE withObject:serverCallObject];
+    }//end if startupORUpdate == STARTUP
     
 }//end get profile
-/*
+
 - (void) responseForForgotPasswordReceived:(NSData*)responseData withError:(NSError*)error
 {
-    int responseType = 0;
+    int responseMessage = 0;
     
     if(error == NULL) //everything ok
     {
@@ -1142,28 +1253,26 @@
         NSDictionary* responseDictionary = [NSJSONSerialization JSONObjectWithData:responseData options:kNilOptions error:&jsonError];
         //NSLog(@"Response Dictionary is: %@\n", responseDictionary); // for testing
         
-        int responseMessage = [[responseDictionary objectForKey:(@"Message")]intValue];
+        responseMessage = [[responseDictionary objectForKey:(@"Message")]intValue];
         
         //possibilities can only be
         // SUCCESS  - 1000
-        // FAILURE:  invalid email format
-        // FAILURE:  email not registered in database
+        // FAILURE: - 1001 invalid email format
+        // FAILURE: - 1006 email not registered in database
         // NETWORKERROR - 9999 / General Error
         
-        // response type can be 1000 for success or 9999 for general failure
-        responseType = responseMessage;
         
     }
     else // error not null
     {
-        responseType = NETWORKERROR; // just set to general server error
+        responseMessage = NETWORKERROR; // just set to general server error
     }
     
     //inform the delegate
-    //[[self teamPageResponseReceivedDelegate] responseforRequestNewTeamReceived:responseType];
+    [[self sessionDelegate] requestPasswordResponseReceived:responseMessage];
     
 }//end forgotPassword
-*/
+
 - (void) responseForRequestNewTeamReceived:(NSData*)responseData withError:(NSError*)error
 {
     int responseMessage = 0;
@@ -1578,6 +1687,8 @@
                 NSMutableDictionary* challengeDict = challengesArray[challengeNumber - 1];
             
                 [challengeDict setObject:dateArray forKey:dateInputKey];
+            }else{ //startup
+                [[self sessionDelegate] updateUserPointsForChallengeWithDateArray:dateArray andTopicsArrayLocation:topicArrayLocation andChallengeNumber:challengeNumber];
             }
             
         }//end success
@@ -1599,8 +1710,7 @@
         //remove this call from the serverCallArray
         [self addOrRemoveCountToStartupList:REMOVE withObject:serverCallObject];
     }else{ //UPDATE
-        [[self sessionDelegate] updateUserPointsForChallengeResponseReceivedWithDateArray:dateArray andTopicsArrayLocation:topicArrayLocation andChallengeNumber:challengeNumber andNetworkError:_netWorkErrorOccurred];
-        _netWorkErrorOccurred = false;
+        [self addOrRemoveFromUpdateAppPointsList:REMOVE withObject:serverCallObject];
     }
     
 }//end responseFor GetUserPointsForCurrentChallengeReceived
@@ -1694,14 +1804,38 @@
         [self userTeamPointsServerCallCompleted];
         
     }else{ //update from teams page
-    
+        
+        
+        //update the top teams information
+        NSString* startupString = [NSString stringWithFormat:@"%d", UPDATEFROMTEAMSPAGE];
+        
+        NSMutableDictionary* topTeamsMonthDict = [[NSMutableDictionary alloc] init];
+        NSObject* topTeamsMonthCallObject = [[NSObject alloc] init];
+        NSString* periodString = currentString;
+        [topTeamsMonthDict setObject:periodString forKey:periodKey];
+        [topTeamsMonthDict setObject:topTeamsMonthCallObject forKey: SERVERCALLOBJECTKEY];
+        [topTeamsMonthDict setObject:startupString forKey:startUpOrUpdateKey];
+        [self addOrRemoveCountToStartupList:ADD withObject:topTeamsMonthCallObject];
+        [self sendMessageToServer:getTopTenTeams withDataDictionary:topTeamsMonthDict];
+        
+        NSMutableDictionary* topTeamsAllTimeDict = [[NSMutableDictionary alloc] init];
+        NSObject* topTeamsAllTimeCallObject = [[NSObject alloc] init];
+        periodString = allTimeString;
+        [topTeamsAllTimeDict setObject:periodString forKey:periodKey];
+        [topTeamsAllTimeDict setObject:topTeamsAllTimeCallObject forKey: SERVERCALLOBJECTKEY];
+        [topTeamsAllTimeDict setObject:startupString forKey:startUpOrUpdateKey];
+        [self addOrRemoveCountToStartupList:ADD withObject:topTeamsAllTimeCallObject];
+        [self sendMessageToServer:getTopTenTeams withDataDictionary:topTeamsAllTimeDict];
+
+        
+        
         [[self sessionDelegate] changeTeamFromTeamsPageResponseReceived:responseMessage andTeamID: teamID andAllTimeRank:allTimeRank andMonthRank:monthRank andAllTimePoint:allTimePoint andMonthPoint:monthPoint];
     }//end else
     
     
 }//end getTeamPointAndRank
 
--(void) responseForGetParticipantPointAndRankReceived:(NSData*)responseData withError:(NSError*)error andServerCallObject:(NSObject*)serverCallObject
+-(void) responseForGetParticipantPointAndRankReceived:(NSData*)responseData withError:(NSError*)error andServerCallObject:(NSObject*)serverCallObject andStartupOrUpdate:(int) startupOrUpdate
 {
     int responseMessage;
     
@@ -1731,6 +1865,10 @@
             [_userProfileDictionary setObject:currentPointString forKey:userCurrentMonthPointsKey];
             [_userProfileDictionary setObject:currentRankString  forKey:userCurrentMonthRankKey];
             
+            if (startupOrUpdate == UPDATE){
+                
+                [[self sessionDelegate] updateUserPoints:allTimePoint andRank:allTimeRank];
+            }
             
         }//end success
         
@@ -1748,21 +1886,21 @@
         
     }
     
-    //take this call out of the startup data structure _serverCallArray
-    [self addOrRemoveCountToStartupList:REMOVE withObject:serverCallObject];
+    if (startupOrUpdate == STARTUP){
+        //take this call out of the startup data structure _serverCallArray
+        [self addOrRemoveCountToStartupList:REMOVE withObject:serverCallObject];
+    }else{ //update
+        [self addOrRemoveFromUpdateAppPointsList:REMOVE withObject:serverCallObject];
+    }
     
 }//end userPointAndRank
 
-- (void) responseforGetTopTenTeamsReceived:(NSData*)responseData withError:(NSError*)error andPeriod:(NSString*)periodString andServerCallObject:(NSObject*)serverCallObject
+- (void) responseforGetTopTenTeamsReceived:(NSData*)responseData withError:(NSError*)error andPeriod:(NSString*)periodString andServerCallObject:(NSObject*)serverCallObject andStartupOrUpdate:(int) startupOrUpdate
 {
     int responseMessage;
-    NSMutableArray* teamsArray;
+    NSMutableArray* temporaryDict = [[NSMutableArray alloc] init];
     
-    if ([periodString isEqualToString:allTimeString]){
-        teamsArray = _topTeamsAllTime;
-    }else{//current month
-        teamsArray = _topTeamsMonthly;
-    }
+   
     
     if(error == NULL) //everything ok
     {
@@ -1795,10 +1933,25 @@
                 [dict setObject:rankString forKey:topRankKey];
                 [dict setObject:teamIDString forKey:teamIDKey];
                 
-                [teamsArray addObject:dict];
+                [temporaryDict addObject:dict];
                 
             }//end for i
             
+            if ([periodString isEqualToString:allTimeString]){
+                _topTeamsAllTime = temporaryDict;
+            }else{//current month
+                _topTeamsMonthly = temporaryDict;
+            }
+            
+            
+            if ( (startupOrUpdate == UPDATE) || (startupOrUpdate == UPDATEFROMTEAMSPAGE) ){
+                if ([periodString isEqualToString:allTimeString]){
+                    [[self sessionDelegate] updateTopTeamsAllTime:temporaryDict];
+                }else{//current month
+                    [[self sessionDelegate] updateTopTeamsCurrentMonth:temporaryDict];
+                }
+            }//end if update
+
             
         }//end success
         
@@ -1816,21 +1969,22 @@
         
     }
     
-    //take this call out of the startup data structure _serverCallArray
-    [self addOrRemoveCountToStartupList:REMOVE withObject:serverCallObject];
+    if (startupOrUpdate == STARTUP){
+        //take this call out of the startup data structure _serverCallArray
+        [self addOrRemoveCountToStartupList:REMOVE withObject:serverCallObject];
+    }else{ //update
+        [self addOrRemoveFromUpdateAppPointsList:REMOVE withObject:serverCallObject];
+    }
+    //updatefrom teams page needs no further call back
 
 }//end responseForGetTopTenTeams
 
-- (void) responseforGetTopTenIndividualsReceived:(NSData*)responseData withError:(NSError*)error andPeriod:(NSString*)periodString andServerCallObject:(NSObject*)serverCallObject
+- (void) responseforGetTopTenIndividualsReceived:(NSData*)responseData withError:(NSError*)error andPeriod:(NSString*)periodString andServerCallObject:(NSObject*)serverCallObject andStartupOrUpdate:(int) startupOrUpdate
 {
     int responseMessage;
-    NSMutableArray* individualsArray;
+    NSMutableArray* temporaryDict = [[NSMutableArray alloc] init];
     
-    if ([periodString isEqualToString:allTimeString]){
-        individualsArray = _topUsersAllTime;
-    }else{//current month
-        individualsArray = _topUsersMonthly;
-    }
+
     
     if(error == NULL) //everything ok
     {
@@ -1863,9 +2017,26 @@
                 [dict setObject:rankString forKey:topRankKey];
                 [dict setObject:userIDString forKey:userIDKey];
                 
-                [individualsArray addObject:dict];
+                [temporaryDict addObject:dict];
+                
                 
             }//end for i
+            
+            if ([periodString isEqualToString:allTimeString]){
+                _topUsersAllTime = temporaryDict;
+             }else{//current month
+                 _topUsersMonthly = temporaryDict;
+             }
+            
+            if (startupOrUpdate == UPDATE){
+                if ([periodString isEqualToString:allTimeString]){
+                    [[self sessionDelegate] updateTopIndividualsAllTime:temporaryDict];
+                }else{//current month
+                    [[self sessionDelegate] updateTopIndividualsCurrentMonth:temporaryDict];
+                }
+                
+            }//end if update
+            
             
             
         }//end success
@@ -1884,8 +2055,12 @@
         
     }
     
-    //take this call out of the startup data structure _serverCallArray
-    [self addOrRemoveCountToStartupList:REMOVE withObject:serverCallObject];
+    if (startupOrUpdate == STARTUP){
+        //take this call out of the startup data structure _serverCallArray
+        [self addOrRemoveCountToStartupList:REMOVE withObject:serverCallObject];
+    }else{ //update
+        [self addOrRemoveFromUpdateAppPointsList:REMOVE withObject:serverCallObject];
+    }
 
 }//end responseForGetTopIndiviuals
 

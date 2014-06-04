@@ -76,7 +76,7 @@
         [theLayer setBorderWidth: 0.0];// we want this button to look like a link, so no border
         [theLayer setBorderColor:[UIColor clearColor].CGColor];
         // This button needs to look like a link - with underlined text - use NSAttributed String
-        NSDictionary* underlineAttributeNormal = @{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSForegroundColorAttributeName: [_appConstants mustardYellowColor], NSFontAttributeName: [_appConstants getStandardFontWithSize:10]};
+        NSDictionary* underlineAttributeNormal = @{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSForegroundColorAttributeName: [_appConstants mustardYellowColor], NSFontAttributeName: [_appConstants getStandardFontWithSize:12]};
         
         NSDictionary* underlineAttributeHighLighted = @{NSUnderlineStyleAttributeName: @(NSUnderlineStyleSingle), NSForegroundColorAttributeName: [_appConstants brightGreenColor], NSFontAttributeName: [_appConstants getStandardFontWithSize:10]};
         NSString* userString = @"Not ";

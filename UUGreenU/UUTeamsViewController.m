@@ -37,7 +37,7 @@
         _userSelectedTeamIDString = @"";
         
         //set the response from model delegate
-        [_model modelforNewTeamDelegate];
+        [_model setModelforNewTeamDelegate:self];
         
     }
     
@@ -90,7 +90,10 @@
     _userSelectedTeamIDString = @"";
     [(UUTeamsView*)self.view setPickersForCategory:SCHOOLBUTTONTAG];
     [(UUTeamsView*)self.view showPickerView: 1];
-    [(UUTeamsView*)self.view disableTeamsButtons];
+
+    [(UUTeamsView*)self.view disableBusinessButton];
+    [(UUTeamsView*)self.view disableOtherButton];
+    [(UUTeamsView*)self.view disableLowerButtons];
     
 }
 
@@ -100,7 +103,11 @@
     _userSelectedTeamIDString = @"";
     [(UUTeamsView*)self.view setPickersForCategory:BUSINESSBUTTONTAG];
     [(UUTeamsView*)self.view showPickerView: 2];
-    [(UUTeamsView*)self.view disableTeamsButtons];
+    
+    [(UUTeamsView*)self.view disableLowerButtons];
+    [(UUTeamsView*)self.view disableSchoolsButton];
+    [(UUTeamsView*)self.view disableOtherButton];
+
 }
 
 - (void) otherButtonWasPressed
@@ -109,7 +116,9 @@
     _userSelectedTeamIDString = @"";
     [(UUTeamsView*)self.view setPickersForCategory:OTHERBUTTONTAG];
     [(UUTeamsView*)self.view showPickerView: 3];
-    [(UUTeamsView*)self.view disableTeamsButtons];
+    
+    [(UUTeamsView*)self.view disableSchoolsButton];
+    [(UUTeamsView*)self.view disableBusinessButton];
     
 }
 
@@ -172,7 +181,11 @@
 {
     NSLog(@"Picker Done Button Was Pressed");  //for testing
     [(UUTeamsView*)self.view hidePickerView];
-    [(UUTeamsView*)self.view enableTeamsButtons];
+    
+    [(UUTeamsView*)self.view enableLowerButtons];
+    [(UUTeamsView*)self.view enableSchoolsButton];
+    [(UUTeamsView*)self.view enableBusinessButton];
+    [(UUTeamsView*)self.view enableOtherButton];
  
 }
 
@@ -189,6 +202,8 @@
         [alert show];
         
     }else{ //send request to server
+        
+        [(UUTeamsView*)self.view hidePickerView];
         
         [SVProgressHUD show];
         [_model changeUserTeam:_userSelectedTeamIDString];
@@ -347,7 +362,9 @@
 {
     if (textField.tag == NEWTEAMTAG){
         //NSLog(@"textFieldShouldBeginEditing");
-        [(UUTeamsView*)self.view disableTeamsButtons];
+        [(UUTeamsView*)self.view disableSchoolsButton];
+        [(UUTeamsView*)self.view disableBusinessButton];
+        [(UUTeamsView*)self.view disableOtherButton];
         textField.backgroundColor = [UIColor colorWithRed:220.0f/255.0f green:220.0f/255.0f blue:220.0f/255.0f alpha:1.0f];
         
         [(UUTeamsView*)self.view liftTextField];
@@ -448,7 +465,9 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     //NSLog(@"textFieldShouldReturn:");
-    [(UUTeamsView*)self.view enableTeamsButtons];
+    [(UUTeamsView*)self.view enableSchoolsButton];
+    [(UUTeamsView*)self.view enableBusinessButton];
+    [(UUTeamsView*)self.view enableOtherButton];
     textField.backgroundColor = [UIColor grayColor];
     [textField resignFirstResponder];
     return YES;

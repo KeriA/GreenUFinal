@@ -127,6 +127,7 @@
 
 - (UIImage*) getChallengeMonthImage:(int)month;
 - (NSString*) getMonthText: (int)monthNum;
+- (NSString*) getMonthTextForCalendarView: (int)monthNum;
 
 - (UIImage*) getTabBarImage: (int) leftOrRight;
 
@@ -141,6 +142,12 @@
 - (UIImage*) getChallengeNumberImage: (int) challengeNumber;
 
 - (UIImage*) getDownIconForButton;
+- (UIImage*) getNonActiveTeamsImageRed;
+- (UIImage*) getNonActiveTeamsImageYellow;
+- (UIImage*) getNonActiveTeamsImageGreen;
+- (UIImage*) getPickerDoneImage;
+- (UIImage*) getPickerBarImage;
+
 
 - (UIImage*) getCalendarIcon;
 - (UIImage*) getCheckboxEmptyIcon;

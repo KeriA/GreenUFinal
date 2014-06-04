@@ -30,7 +30,7 @@
     //#  userIdKey   :  user server id
     //#  teamIDKey   :  ID of user's current team as string
     //#  userImageKey:  user's profile image
-    //#  userRankMonthKey   : holds the rank as string  - not all teams will have these last 4 objects filled
+    //#  userRankMonthKey   : holds the rank as string
     //#  userRankAllTimeKey : holds the rank as string
     //#  userMonthPointsKey : holds the team points as string
     //#  userAllTimePointsKey : holds the team points as string
@@ -119,7 +119,7 @@
         //NSLog(@"Documents Path is: %@", documentsPath); // for testing
         
         _modelDataFilePath = [documentsPath stringByAppendingPathComponent:@"UserInfo.plist"];
-        //NSLog(@"\nThe path is:  %@\n", _modelDataFilePath); //for testing
+        NSLog(@"\nThe path is:  %@\n", _modelDataFilePath); //for testing
         
         // check and see if if the data file already exists in the documents directory
         if ([[NSFileManager defaultManager] fileExistsAtPath:_modelDataFilePath] == FALSE)
@@ -194,6 +194,10 @@
     
 }//end register NewParticipant
 
+- (void) userRequestsPassword:(NSString*)email
+{
+    [_session requestUserPassword:email];
+}//end requestpassword
 
 
 /******************************************************************************************************
@@ -277,8 +281,8 @@
 - (void) startupCallsDataReceived:(int)responseCase withCallType:(int)callType{
     
     if (responseCase == SUCCESS){
-        //get the data structures from the session
         
+        //get the data structures from the session
         _userProfileDictionary = [_session getUserProfileDictionary];
         _topicsArray = [_session getTopicsArray];
         _teamsArray = [_session getTeamsArray];
@@ -287,7 +291,10 @@
         _topUsersAllTime = [_session getTopUsersAllTime];
         _topTeamsMonthly = [_session getTopTeamsCurrentMonth];
         _topTeamsAllTime = [_session getTopTeamsAllTime];
-  
+        
+        // update the internal file with user's email and password
+        [self storeEmail:[_userProfileDictionary objectForKey:userEmailKey] andPassword:[_userProfileDictionary objectForKey:userPasswordKey]];
+        
     }//end SUCCESS
     
     if (callType == LOGINFROMLOGIN){
@@ -323,9 +330,35 @@
     
 }//end changeTeam
 
+- (void) updateUserPointsForChallengeWithDateArray:(NSArray *)dateArray andTopicsArrayLocation:(int)arrayLocation andChallengeNumber:(int)challengeNumber
+{
+    //add this array to the challenge dictionary
+    NSMutableDictionary* topicDict = _topicsArray[arrayLocation];
+    NSArray* challengesArray = [topicDict objectForKey:challengeArrayKey];
+    NSMutableDictionary* challengeDict = challengesArray[challengeNumber - 1];
+    
+    [challengeDict setObject:dateArray forKey:dateInputKey];
+    
+    //update the user status here
+    int daysUserCompleted = (int)[dateArray count];
+    int daysPossible = [[challengeDict objectForKey:daysPossibleKey]intValue];
+    
+    NSString* userStatus;
+    if (daysUserCompleted >= daysPossible){
+        userStatus = @"2"; //done
+    }else if (daysUserCompleted == 0){
+        userStatus = @"0";  //not started
+    }else{
+        userStatus = @"1"; //in progress
+    }
+    
+    [challengeDict setObject:userStatus forKey:userStatusKey];
+
+}//end updatepointsfor challenge
+/*
 - (void) updateUserPointsForChallengeResponseReceivedWithDateArray:(NSArray *)dateArray andTopicsArrayLocation:(int)arrayLocation andChallengeNumber:(int)challengeNumber andNetworkError:(BOOL)networkError
 {
-     //add this array to the challenge dictionary
+    ///add this array to the challenge dictionary
      NSMutableDictionary* topicDict = _topicsArray[arrayLocation];
      NSArray* challengesArray = [topicDict objectForKey:challengeArrayKey];
      NSMutableDictionary* challengeDict = challengesArray[challengeNumber - 1];
@@ -349,8 +382,50 @@
      
      //inform the specific challenge View controller that the operation is complete
     [[self modelForChallengePointsUpdatedDelegate] userChallengePointsUpdatedwithError:networkError];
-    
+ 
 }//end updateUserPointsForChallenge
+ */
+
+- (void) updateUserPoints:(int)points andRank:(int)rank
+{
+    NSString* rankString = [NSString stringWithFormat:@"%d", rank];
+    NSString* pointString = [NSString stringWithFormat:@"%d", points];
+    
+    [_userProfileDictionary setObject:rankString forKey: userAllTimeRankKey];
+    [_userProfileDictionary setObject:pointString forKey: userAllTimePointsKey];
+    
+}//end update user points and rank
+
+- (void) updateTopIndividualsAllTime:(NSMutableArray *)allTimeIndividuals
+{
+    _topUsersAllTime = allTimeIndividuals;
+}
+
+- (void) updateTopIndividualsCurrentMonth:(NSMutableArray *)monthIndividuals
+{
+    _topUsersMonthly = monthIndividuals;
+}
+
+- (void) updateTopTeamsAllTime:(NSMutableArray *)allTimeTeams
+{
+    _topTeamsAllTime = allTimeTeams;
+}
+
+- (void) updateTopTeamsCurrentMonth:(NSMutableArray *)monthTeams
+{
+    _topTeamsMonthly = monthTeams;
+}
+
+-(void) updateCallsCompleteWithError:(BOOL)error
+{
+    //inform the specific challenge View controller that the operation is complete
+    [[self modelForChallengePointsUpdatedDelegate] userChallengePointsUpdatedwithError:error];
+}
+
+- (void) requestPasswordResponseReceived:(int)responseCase
+{
+    [[self modelForLoginScreenDelegate] responseForRequestPasswordReceived:responseCase];
+}//end requestpassword
 
 /******************************************************************************************************
  *

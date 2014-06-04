@@ -18,6 +18,7 @@
 -(void) loginButtonWasPressed;
 -(void) faceBookLoginButtonWasPressed;
 -(void) signUpButtonWasPressed;
+-(void) forgotPasswordButtonWasPressed;
 @end // end protocol
 
 @interface UULoginView : UIView

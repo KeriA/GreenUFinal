@@ -36,7 +36,8 @@
     //for pop-up calendar
     UIView*          _calendarContainerView;
     UIToolbar*       _calendarToolBar;
-    UIBarButtonItem* _calendarDoneButton;
+    UIButton*        _calendarDoneButton;
+    UIButton*        _monthDisplayButton;
     UUCalendarView* _calendarView;
     
     CGRect _CalendarFrameShow;
@@ -237,13 +238,40 @@
             _calendarContainerView.alpha = 1.0;
             _calendarContainerView.backgroundColor = [UIColor colorWithPatternImage:[_appConstants getBackgroundImage]];
             
+            
+            
+            
+            
+            
+            _calendarDoneButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [_calendarDoneButton setFrame:CGRectMake(0.0, 0.0, 45.0, 25.0)];
+            [_calendarDoneButton addTarget:specificChallengeViewDelegate action:@selector(calendarDoneButtonWasPressed) forControlEvents:UIControlEventTouchUpInside];
+            [_calendarDoneButton setBackgroundImage:[_appConstants getPickerDoneImage] forState:UIControlStateNormal];
+            [_calendarDoneButton setTitle:@"Done" forState:UIControlStateNormal];
+            [_calendarDoneButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [_calendarDoneButton.titleLabel setFont:[_appConstants getBoldFontWithSize:15.0]];
+            UIBarButtonItem* doneItem = [[UIBarButtonItem alloc] initWithCustomView:_calendarDoneButton];
+            
+            _monthDisplayButton = [UIButton buttonWithType:UIButtonTypeCustom];
+            [_monthDisplayButton setFrame:CGRectMake(0.0, 0.0, 200.0, 25.0)];
+            //[_monthDisplayButton addTarget  - target not needed for this button - just a quick and dirty hack to get a label up there
+            [_monthDisplayButton setBackgroundColor:[UIColor clearColor]];
+            [_monthDisplayButton setTitle:@"March 2014" forState:UIControlStateNormal];
+            [_monthDisplayButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+            [_monthDisplayButton setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
+            [_monthDisplayButton.titleLabel setFont:[_appConstants getBoldFontWithSize:20.0]];
+            _monthDisplayButton.enabled = false;
+            UIBarButtonItem* monthItem = [[UIBarButtonItem alloc] initWithCustomView:_monthDisplayButton];
+            
+            
             _calendarToolBar = [[UIToolbar alloc]init];
             _calendarToolBar.tintColor = [_appConstants cherryRedColor];  //text color
             _calendarToolBar.barTintColor = [UIColor blackColor];  //background color
-            _calendarDoneButton = [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleBordered target:specificChallengeViewDelegate action:@selector(calendarDoneButtonWasPressed)];
+            [_calendarToolBar setBackgroundImage:[_appConstants getPickerBarImage] forToolbarPosition:UIBarPositionAny barMetrics:UIBarMetricsDefault];
+            //[_calendarToolBar setBackgroundImage:[_appConstants getPickerBarImage] forToolbarPosition:<#(UIBarPosition)#> barMetrics:<#(UIBarMetrics)#>]
             //this button item is used only to force the 'done' button to the right side
             UIBarButtonItem* flexibleSpaceLeft = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-            NSArray* items = [[NSArray alloc]initWithObjects:flexibleSpaceLeft, _calendarDoneButton, nil];
+            NSArray* items = [[NSArray alloc]initWithObjects: monthItem, flexibleSpaceLeft, doneItem, nil];
             [_calendarToolBar setItems:items];
             
             
@@ -572,6 +600,11 @@
     }
     [self setNeedsDisplay];
     
+}
+
+- (void) setCalendarMonthAndYear:(NSString*)monthAndYearString
+{
+    [_monthDisplayButton setTitle:monthAndYearString forState:UIControlStateNormal];
 }
 
 //- (void) setCalendarDelegate:(id)delegate

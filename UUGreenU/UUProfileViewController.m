@@ -13,6 +13,14 @@
 #define IMAGEWIDTH  130.0
 
 @interface UUProfileViewController ()
+{
+    NSString* _userName;
+    NSString* _usersTeam;
+    NSString* _usersPassword;
+    int _userPoints;
+    int _userRank;
+    UIImage* _userImage;
+}
 
 @end
 
@@ -31,6 +39,13 @@
         //fill in the data model to use
         _model = model;
         _appConstants = appConstants;
+        
+        _userName      = [_model getUserName];
+        _usersTeam     = [_model getUserTeamName];
+        _usersPassword = [_model getUserPassword];
+        _userPoints    = [_model getUserPoints:ALLTIME];
+        _userRank      = [_model getUserRank:ALLTIME];
+        _userImage     = [_model getUserImage];
         
     }
     
@@ -65,18 +80,15 @@
     //UIViewController has a title property that will be displayed by the
     //NavigationController. So when pushing a new UIViewController onto the
     //navigation stack set the title of that UIViewController
-    self.title = @"Profile";
-    [(UUProfileView*)self.view updateUserName:[_model getUserName]];
-    [(UUProfileView*)self.view updateTeamName:[_model getUserTeamName]];
-    UIImage* userProfileImage = [_model getUserImage];
-    UIImage* userProfileImageSelected = userProfileImage;
-    if (userProfileImage == nil){
-        userProfileImage = [UIImage imageNamed:@"genericUserImage.png"];
-        userProfileImageSelected = [UIImage imageNamed:@"genericUserImageSelected.png"];
-    }
-    [(UUProfileView*)self.view updateUserImage:userProfileImage andSelectedImage:userProfileImageSelected];
-    NSString* userpassword = [_model getUserPassword];
-    int length = (int)[userpassword length];
+    self.title = @"";
+    
+    [(UUProfileView*)self.view updateUserName:_userName];
+    [(UUProfileView*)self.view updateTeamName:_usersTeam];
+    [(UUProfileView*)self.view updateUserImage:_userImage andSelectedImage:_userImage];
+    [(UUProfileView*)self.view updateUserPoints:_userPoints];
+    [(UUProfileView*)self.view updateUserRank:_userRank];
+    
+    int length = (int)[_usersPassword length];
     
     NSString* maskedPassword = @"*";
     for (int i = 0; i < length - 1; i++)
@@ -128,6 +140,12 @@
     
 }//end changePasswordButtonWasPressed
 
+- (void) takeMoreChallengesButtonWasPressed
+{
+    NSLog(@"Take More Challenges Button Was Pressed"); //for testing
+    // launch the main view
+    [self.navigationController popViewControllerAnimated:true];
+}
 
 /**********************************************************************************************************
  *

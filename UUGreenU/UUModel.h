@@ -136,6 +136,7 @@
 @required
 -(void) loginFromLoginScreenServerDataReceived:(int)responseCase;
 -(void) startupDataReceived:(int)responseCase;
+-(void) responseForRequestPasswordReceived:(int)responseCase;
 @end
 
 // Register Participant
@@ -177,6 +178,7 @@
 - (void) loginFromSplashScreen;
 - (void) loginFromLoginScreenWithEmail:(NSString*)userEmail andPassword:(NSString*)password;
 - (void) registerNewParticipantWithEmail:(NSString*)email andPassword:(NSString*)password andUserName:(NSString*)username;
+- (void) userRequestsPassword:(NSString*)email;
 
 //new team
 - (void) requestNemTeam:(NSString*)teamName andType:(NSString*)teamType;

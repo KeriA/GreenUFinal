@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 #import "UUProfileView.h"
+#import "UUChallengeViewController.h"
+//#import "UUMainViewController.h"
 
 @interface UUProfileViewController : UIViewController<UUProfileViewDelegate, UITextFieldDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 {

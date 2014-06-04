@@ -70,7 +70,7 @@
     //UIViewController has a title property that will be displayed by the
     //NavigationController. So when pushing a new UIViewController onto the
     //navigation stack set the title of that UIViewController
-    self.title = @"New User";
+    self.title = @"";
 }
 
 /**************************************************************************************************
@@ -172,11 +172,13 @@
 
 - (void) faceBookButtonWasPressed
 {
+    NSLog(@"Facebook Button Was Pressed"); //for testing
     
 }//end faceBookButtonWasPressed
 
 - (void) twitterButtonWasPressed
 {
+    NSLog(@"Twitter Button was pressed"); //for testing
     
 }//end twitterButtonWasPressed
 

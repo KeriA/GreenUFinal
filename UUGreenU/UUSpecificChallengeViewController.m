@@ -89,7 +89,7 @@
         //create calendar components for type "repeat"
         if (_challengeType == REPEAT)
         {
-            _calendarMonthString = [NSString stringWithFormat:@"%@ %d", [_appConstants getMonthText:_monthNumber], _yearNumber];
+            _calendarMonthString = [NSString stringWithFormat:@"%@ %d", [_appConstants getMonthTextForCalendarView: _monthNumber], _yearNumber];
             _numDaysUserHasSelectedFromCalendar = 0;  //initialize to '0'
             
             _userCompletionDatesAsDayString = [self getUserCompletedDatesAsString];
@@ -172,7 +172,7 @@
     //set the user points
     [(UUSpecificChallengeView*)self.view updatePointsForChallenge:_userPoints andChallengePoints:_totalPoints];
 
-    
+    [(UUSpecificChallengeView*)self.view setCalendarMonthAndYear:_calendarMonthString];
     //set the calendar
     if (_challengeType == REPEAT){
         [(UUSpecificChallengeView*)self.view setCalendar:_firstDayOfMonth numDays:_numberOfDaysInMonth daysCompleted:_userCompletionDatesAsDayString andMonthString:_calendarMonthString];
@@ -202,6 +202,13 @@
     
     [(UUSpecificChallengeView*)self.view updatePointsForChallenge:_userPoints andChallengePoints:_totalPoints];
     
+    if (_challengeType == REPEAT){
+        _userCompletionDatesAsDayString = [self getUserCompletedDatesAsString];
+        [_userSelectedDatesFromCalendarAsString removeAllObjects];
+        [(UUSpecificChallengeView*)self.view setCalendar:_firstDayOfMonth numDays:_numberOfDaysInMonth daysCompleted:_userCompletionDatesAsDayString andMonthString:_calendarMonthString];
+        
+    }
+    
     
     //check to see if this challenge is complete
     if (_numDaysUserhasAlreadyCompleted >= _numDaysPossibleForChallenge){
@@ -212,7 +219,7 @@
     
     if (error)
     {
-        NSString* alertMessage = @"Network connection may have been temporarily lost.  Please check that your submitted challenge completions were registered.";
+        NSString* alertMessage = @"Network connection may have been interrupted.  Please check that your submitted challenge completions were registered.";
         UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:alertMessage delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
         [alert show];
     }

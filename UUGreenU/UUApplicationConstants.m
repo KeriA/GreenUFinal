@@ -432,6 +432,84 @@
     return monthText;
 }//end get MonthText
 
+
+- (NSString*) getMonthTextForCalendarView: (int)monthNum
+{
+    NSString* monthText;
+    
+    switch (monthNum)
+    {
+        case (1):
+        {
+            monthText = @"January";
+            break;
+        }
+        case (2):
+        {
+            monthText = @"February";
+            break;
+        }
+        case (3):
+        {
+            monthText = @"March";
+            break;
+        }
+        case (4):
+        {
+            monthText = @"April";
+            break;
+        }
+        case (5):
+        {
+            monthText = @"May";
+            break;
+        }
+        case (6):
+        {
+            monthText = @"June";
+            break;
+        }
+        case (7):
+        {
+            monthText = @"July";
+            break;
+        }
+        case (8):
+        {
+            monthText = @"August";
+            break;
+        }
+        case (9):
+        {
+            monthText = @"September";
+            break;
+        }
+        case (10):
+        {
+            monthText = @"October";
+            break;
+        }
+        case (11):
+        {
+            monthText = @"November";
+            break;
+        }
+        case (12):
+        {
+            monthText = @"December";
+            break;
+        }
+        default:
+        {
+            monthText = @"January";
+        }
+            
+    }
+    
+    return monthText;
+}//end get MonthText
+
+
 //For top Teams
 - (UIImage*) getTabBarImageForChallengessNotSelected:(int)LeftOrRight
 {
@@ -517,6 +595,38 @@
 {
     UIImage* image = [UIImage imageNamed:@"inverted_triangle.png"];
     return image;
+}
+
+- (UIImage*) getNonActiveTeamsImageRed
+{
+    UIImage* image = [UIImage imageNamed:@"teams-notactivered.png"];
+    return image;
+}
+
+- (UIImage*) getNonActiveTeamsImageYellow
+{
+    UIImage* image = [UIImage imageNamed:@"teams-notactiveyellow.png"];
+    return image;
+}
+
+- (UIImage*) getNonActiveTeamsImageGreen
+{
+    UIImage* image = [UIImage imageNamed:@"teams-notactivegreen.png"];
+    return image;
+}
+
+- (UIImage*) getPickerDoneImage
+{
+    UIImage* image = [UIImage imageNamed:@"donebutton.png"];
+    return image;
+
+}
+
+- (UIImage*) getPickerBarImage
+{
+    UIImage* image = [UIImage imageNamed:@"calendargradient.png"];
+    return image;
+
 }
 
 //For the "About" page

@@ -10,6 +10,7 @@
 
 @implementation UUCreateUserView
 {
+    UILabel*     _NewUserLabel;
     UILabel*     _errorMessageLabel;
     UITextField* _displayNameTextField;
     UITextField* _emailTextField;
@@ -41,6 +42,17 @@
         
         //create subviews
         // create the buttons and labels
+        _NewUserLabel = [[UILabel alloc] init];
+        [_NewUserLabel setBackgroundColor:[UIColor clearColor]];
+        [_NewUserLabel setText:@"New User"];
+        [_NewUserLabel setTextColor:[UIColor whiteColor]];
+        [_NewUserLabel setFont:[_appConstants getBoldFontWithSize:TOPLABELFONTSIZE]];
+        [_NewUserLabel setTextAlignment:NSTextAlignmentLeft];
+        [_NewUserLabel setNumberOfLines:1];
+        
+
+        
+        
         _errorMessageLabel = [[UILabel alloc] init];
         [_errorMessageLabel setBackgroundColor:[UIColor clearColor]];
         [_errorMessageLabel setText:@""];
@@ -51,16 +63,22 @@
         [_errorMessageLabel setLineBreakMode:NSLineBreakByWordWrapping];
         
         
-        // important note:  When using custom fonts, it turns out that often these fonts do not have
-        //                  what is called the 'ascender property' set correctly, resulting in
-        //                  text being displayed too high, or off vertical center.
-        //                  Rather than mess with the font file directly (which can be done, but I'll
-        //                  dodge that bullet if I can), a quick and dirty fix is to play around
-        //                  with the 'contentEdgeInsets' settings, and just shove the whole text down
-        //                  a bit.  This seemed to work well.
-        //
-        //  update:  switched back to system font - just looked better
         
+        // rounded rect button
+        _signUpButton = [[UIButton alloc]init];
+        _signUpButton.layer.borderWidth = .06f; // these two lines
+        _signUpButton.layer.cornerRadius = 6;   // round the corners
+        [_signUpButton setTitle:@"Sign Up" forState:UIControlStateNormal];
+        [_signUpButton setBackgroundColor:[_appConstants cherryRedColor]];
+        [_signUpButton.titleLabel setFont:[_appConstants getBoldFontWithSize:18.0]];
+        [_signUpButton.titleLabel setTextColor:[UIColor whiteColor]];
+        [_signUpButton addTarget: createUserViewDelegate
+                         action:@selector(signUpButtonWasPressed)
+               forControlEvents:UIControlEventTouchDown];
+
+        
+        
+        /*
         _signUpButton = [UIButton buttonWithType:UIButtonTypeCustom];
         // set the text properties
         [_signUpButton  setTitle:@"Sign Up" forState:UIControlStateNormal];
@@ -76,7 +94,7 @@
                           action:@selector(signUpButtonWasPressed)
                 forControlEvents:UIControlEventTouchDown];
         
-        
+        */
         // create the textfields and set its delegates
         _displayNameTextField = [[UITextField alloc] init];
         _displayNameTextField.placeholder = @"Display Name";
@@ -169,6 +187,7 @@
         
         
         // add the subviews
+        [self addSubview:_NewUserLabel];
         [self addSubview:_errorMessageLabel];
         [self addSubview:_displayNameTextField];
         [self addSubview:_emailTextField];
@@ -198,16 +217,20 @@
  */
 - (void) layoutSubviews
 {
+    
     [super layoutSubviews];
     
-    
+    /*** TOP LABEL - FOR CONSISTENCY ACROSS FRAMES  ***/
     
     // Get the bounds of the current view. We will use this to dynamically calculate the frames of our subviews
     CGRect bounds = [self bounds];
+    //NSLog(@"width is %f and height is %f", bounds.size.width, bounds.size.height);//for testing
     
-    // We want the background image to show up, so we need to adjust the width and height of the rectangles accordingly.
-    // We can get a width adjustment immediately.
-    //
+    //first, remove a strip off of the top to make room for the navigation controller
+    bounds.size.height = bounds.size.height - (TOPMARGIN * 1.5);  //1.5 x so we remove a strip off of the bottom as well
+    bounds.origin.y = TOPMARGIN;
+    
+    // Next, create an inset off of the sides so that there is a bit of an edge
     // The following notes are FYI to explain how CGRectInset works:
     // create the rectangles so that they are a bit smaller (showing more background) and
     // centered on the same point  (using CGRectInset)
@@ -219,11 +242,19 @@
     //          dy:  The y-coordinate value to use for adjusting the source rectangle.
     //               To create an inset rectangle, specify a positive value. To create a larger,
     //               encompassing rectangle, specify a negative value.
+    CGRect insetBounds  = CGRectInset(bounds, bounds.size.width * PAGEINSETAMOUNT, 0.0);
     
-    CGFloat boundsInsetWidth  = bounds.size.width * 0.10; // take off a percentage of the width
-    CGFloat boundsInsetHeight = bounds.size.height * 0.10; // take off a percentage of the width
-    bounds = CGRectInset(bounds, boundsInsetWidth, boundsInsetHeight);
-    bounds.origin.y = bounds.origin.y + 10;
+    //create the top label margin  (for consistency across pages)
+    CGRect topLabelRect = CGRectMake(insetBounds.origin.x, insetBounds.origin.y, insetBounds.size.width, TOPLABELHEIGHT);
+    
+    //now adjust the inset bounds
+    insetBounds.origin.y = insetBounds.origin.y + TOPLABELHEIGHT - 15.0;  // this can be adjusted as needed per frame
+    insetBounds.size.height = insetBounds.size.height - TOPLABELHEIGHT;
+    
+    
+    
+    /***  REMAINING RECTS  ***/
+    
     
     // the specific rects that will be used for subviews
     CGRect errorMessageRect;    // this will hold the error message rect
@@ -253,14 +284,22 @@
     //                           CGRectMaxXedge  :  will measure from the right
     //
     // original rect, 1st slice,      remainder,   how much to put in slice, which edge to measure from
-    CGRectDivide(bounds, &errorMessageRect, &textfieldsRect, bounds.size.height/ 7.0, CGRectMinYEdge);
+    CGRectDivide(insetBounds, &errorMessageRect, &textfieldsRect, bounds.size.height/ 7.0, CGRectMinYEdge);
     CGRectDivide(textfieldsRect, &textfieldsRect, &agreementLabelRect, textfieldsRect.size.height/ 2.5, CGRectMinYEdge);
     // now that we have the textfields rect, divide it amongst the fields
     CGRectDivide(textfieldsRect, &displayNameRect, &emailRect, textfieldsRect.size.height/3.0, CGRectMinYEdge);
     CGRectDivide(emailRect, &emailRect, &passwordRect, emailRect.size.height/2.0, CGRectMinYEdge);
+    //shring the height of the textfields a bit
+    CGFloat shrinkAmount = .05;
+    displayNameRect = CGRectInset(displayNameRect, 0.0, displayNameRect.size.height * shrinkAmount);
+    emailRect       = CGRectInset(emailRect, 0.0, emailRect.size.height * shrinkAmount);
+    passwordRect    = CGRectInset(passwordRect, 0.0, passwordRect.size.height * shrinkAmount);
     
-    CGRectDivide(agreementLabelRect, &agreementLabelRect, &signUpButtonRect, agreementLabelRect.size.height/2.5, CGRectMinYEdge);
-    CGRectDivide(signUpButtonRect, &signUpButtonRect, &fbButtonRect, signUpButtonRect.size.height/2.5, CGRectMinYEdge);
+    
+    CGRectDivide(agreementLabelRect, &agreementLabelRect, &signUpButtonRect, agreementLabelRect.size.height/2.0, CGRectMinYEdge);
+    CGRectDivide(signUpButtonRect, &signUpButtonRect, &fbButtonRect, signUpButtonRect.size.height/2.0, CGRectMinYEdge);
+    signUpButtonRect = CGRectInset(signUpButtonRect, 0.0, signUpButtonRect.size.height * .10);
+    
     // we want the fb and twitter buttons to be square.  Make sure that the original rectangle that holds
     // both of these buttons (currently what is in the fbButtonRect) is a length and width that can be
     // divided nicely into two square buttons
@@ -302,14 +341,11 @@
     fbImageRect = CGRectInset(fbButtonRect, inset, inset);
     twitterImageRect = CGRectInset(twitterButtonRect, inset, inset);
     
-    // NSLog(@"KERI!!! the dimensions are height:  %f and width:  %f", fbImageRect.size.height, fbImageRect.size.width);
-    
-    
-    
     
     
     
     // set the frames
+    [_NewUserLabel         setFrame:topLabelRect];
     [_errorMessageLabel    setFrame:errorMessageRect];
     [_displayNameTextField setFrame:displayNameRect];
     [_emailTextField       setFrame:emailRect];

@@ -62,7 +62,7 @@
     //that will be displayed by the NavigationController. So when pushing a new
     //UIViewController onto the navigation stack set the title of that UIViewController
     //to whatever is appropriate.
-    self.title  = @"Login";
+    self.title  = @"";
     
     //hide the 'back' button
     self.navigationItem.leftBarButtonItem = nil;
@@ -97,6 +97,33 @@
  *                              UULoginViewDelegateMethods
  *
  ******************************************************************************************************/
+-(void) forgotPasswordButtonWasPressed
+{
+    NSLog(@"Forgot Button Was Pressed"); //for testing
+    
+    // first test to see if information was correctly filled
+    UITextField* emailTextField = (UITextField *)[self.view viewWithTag:emailTag];
+    _userEmail = emailTextField.text;
+
+    
+    if ([self emailIsOK:_userEmail])
+    {
+        [SVProgressHUD show];
+        [_model userRequestsPassword:_userEmail];
+        
+    }else{
+        
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:@"Please enter a valid email format." delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+        
+        [alert show];
+        //set focus to email text field
+        UITextField* emailTextField = (UITextField *)[self.view viewWithTag:emailTag];
+        [emailTextField becomeFirstResponder];
+
+    }
+    
+}//end forgot button
+
 -(void) loginButtonWasPressed
 {
     //resign the keyboard
@@ -398,6 +425,48 @@
         }
     }//end switch
 }//end startupdata received
+
+-(void) responseForRequestPasswordReceived:(int)responseCase
+{
+    [SVProgressHUD dismiss];
+    
+    NSString* alertMessage;
+    
+    switch (responseCase)
+    {
+        case (SUCCESS):
+        {
+            alertMessage = @"Please check your email later for your password.";
+            break;
+        }
+        case (NETWORKERROR):
+        {
+            alertMessage = @"A Network error has occurred.  Please check your connection and try again.";
+            break;
+        }
+        case (1001):
+        {
+            alertMessage = @"Please enter a valid email format.";
+            break;
+        }
+        case (1006):
+        {
+            alertMessage = @"The email entered has not been registered with Greenu.  Please check your email or sign up for GreenU.";
+            break;
+        }
+        default:
+        {
+            alertMessage = @"A Network error has occurred.  Please check your connection and try again.";
+            break;
+        }
+    }
+    
+    UIAlertView* alert = [[UIAlertView alloc] initWithTitle:nil message:alertMessage delegate:self cancelButtonTitle:@"OK" otherButtonTitles: nil];
+    [alert show];
+    
+}//end requestpassword
+
+
 
 /**********************************************************************************************************
 *

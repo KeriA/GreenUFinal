@@ -45,5 +45,6 @@
 
 - (void) setComponentsToComplete;
 - (void) setComponentsToInComplete;
+- (void) setCalendarMonthAndYear:(NSString*)monthAndYearString;
 
 @end

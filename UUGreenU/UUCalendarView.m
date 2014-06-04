@@ -10,7 +10,7 @@
 
 @implementation UUCalendarView
 {
-    UILabel* _monthLabel;
+    //UILabel* _monthLabel;
     UILabel* _sunLabel;
     UILabel* _monLabel;
     UILabel* _tueLabel;
@@ -53,60 +53,60 @@
         [self setBackgroundColor:[UIColor colorWithPatternImage:[appConstants getBackgroundImage]]];
         //[self setBackgroundColor:[_appConstants burntOrangeColor]]; //for testing
         
-        _monthLabel = [[UILabel alloc] init];
-        [_monthLabel setBackgroundColor:[UIColor clearColor]];
-        [_monthLabel setText:@""];
-        [_monthLabel setTextColor:[_appConstants brightGreenColor]];
-        [_monthLabel setFont:[_appConstants getBoldFontWithSize:15.0]];
-        [_monthLabel setTextAlignment:NSTextAlignmentCenter];
+        //_monthLabel = [[UILabel alloc] init];
+        //[_monthLabel setBackgroundColor:[UIColor clearColor]];
+        //[_monthLabel setText:@""];
+        //[_monthLabel setTextColor:[_appConstants brightGreenColor]];
+        //[_monthLabel setFont:[_appConstants getBoldFontWithSize:15.0]];
+        //[_monthLabel setTextAlignment:NSTextAlignmentCenter];
         
         _sunLabel = [[UILabel alloc] init];
         [_sunLabel setBackgroundColor:[UIColor clearColor]];
-        [_sunLabel setText:@"SUN"];
-        [_sunLabel setTextColor:[_appConstants cherryRedColor]];
-        [_sunLabel setFont:[_appConstants getBoldFontWithSize:12.0]];
+        [_sunLabel setText:@"Su"];
+        [_sunLabel setTextColor:[UIColor whiteColor]];
+        [_sunLabel setFont:[_appConstants getBoldFontWithSize:13.0]];
         [_sunLabel setTextAlignment:NSTextAlignmentCenter];
         
         _monLabel = [[UILabel alloc] init];
         [_monLabel setBackgroundColor:[UIColor clearColor]];
-        [_monLabel setText:@"MON"];
-        [_monLabel setTextColor:[_appConstants cherryRedColor]];
-        [_monLabel setFont:[_appConstants getBoldFontWithSize:12.0]];
+        [_monLabel setText:@"M"];
+        [_monLabel setTextColor:[UIColor whiteColor]];
+        [_monLabel setFont:[_appConstants getBoldFontWithSize:13.0]];
         [_monLabel setTextAlignment:NSTextAlignmentCenter];
         
         _tueLabel = [[UILabel alloc] init];
         [_tueLabel setBackgroundColor:[UIColor clearColor]];
-        [_tueLabel setText:@"TUE"];
-        [_tueLabel setTextColor:[_appConstants cherryRedColor]];
-        [_tueLabel setFont:[_appConstants getBoldFontWithSize:12.0]];
+        [_tueLabel setText:@"Tu"];
+        [_tueLabel setTextColor:[UIColor whiteColor]];
+        [_tueLabel setFont:[_appConstants getBoldFontWithSize:13.0]];
         [_tueLabel setTextAlignment:NSTextAlignmentCenter];
         
         _wedLabel = [[UILabel alloc] init];
         [_wedLabel setBackgroundColor:[UIColor clearColor]];
-        [_wedLabel setText:@"WED"];
-        [_wedLabel setTextColor:[_appConstants cherryRedColor]];
-        [_wedLabel setFont:[_appConstants getBoldFontWithSize:12.0]];
+        [_wedLabel setText:@"W"];
+        [_wedLabel setTextColor:[UIColor whiteColor]];
+        [_wedLabel setFont:[_appConstants getBoldFontWithSize:13.0]];
         [_wedLabel setTextAlignment:NSTextAlignmentCenter];
         
         _thuLabel = [[UILabel alloc] init];
         [_thuLabel setBackgroundColor:[UIColor clearColor]];
-        [_thuLabel setText:@"THU"];
-        [_thuLabel setTextColor:[_appConstants cherryRedColor]];
-        [_thuLabel setFont:[_appConstants getBoldFontWithSize:12.0]];
+        [_thuLabel setText:@"Th"];
+        [_thuLabel setTextColor:[UIColor whiteColor]];
+        [_thuLabel setFont:[_appConstants getBoldFontWithSize:13.0]];
         [_thuLabel setTextAlignment:NSTextAlignmentCenter];
         
         _friLabel = [[UILabel alloc] init];
         [_friLabel setBackgroundColor:[UIColor clearColor]];
-        [_friLabel setText:@"FRI"];
-        [_friLabel setTextColor:[_appConstants cherryRedColor]];
-        [_friLabel setFont:[_appConstants getBoldFontWithSize:12.0]];
+        [_friLabel setText:@"F"];
+        [_friLabel setTextColor:[UIColor whiteColor]];
+        [_friLabel setFont:[_appConstants getBoldFontWithSize:13.0]];
         [_friLabel setTextAlignment:NSTextAlignmentCenter];
         
         _satLabel = [[UILabel alloc] init];
         [_satLabel setBackgroundColor:[UIColor clearColor]];
-        [_satLabel setText:@"SAT"];
-        [_satLabel setTextColor:[_appConstants cherryRedColor]];
-        [_satLabel setFont:[_appConstants getBoldFontWithSize:12.0]];
+        [_satLabel setText:@"Sa"];
+        [_satLabel setTextColor:[UIColor whiteColor]];
+        [_satLabel setFont:[_appConstants getBoldFontWithSize:13.0]];
         [_satLabel setTextAlignment:NSTextAlignmentCenter];
 
         //create the buttons
@@ -129,7 +129,7 @@
             
         }// end for i
        
-        [self addSubview:_monthLabel];
+        //[self addSubview:_monthLabel];
         [self addSubview:_sunLabel];
         [self addSubview:_monLabel];
         [self addSubview:_tueLabel];
@@ -204,7 +204,7 @@
     
     //CGRectDivide(bounds, &calendarTitleRect, &buttonsRect, bounds.size.height - (sectionHeight * 6.0), CGRectMinYEdge);
     CGRectDivide(bounds, &calendarTitleRect, &buttonsRect, bounds.size.height - (sectionHeight * 5.0), CGRectMinYEdge);
-    CGRectDivide(calendarTitleRect, &calendarTitleRect, &sunRect, calendarTitleRect.size.height/2.0, CGRectMinYEdge);
+    CGRectDivide(calendarTitleRect, &calendarTitleRect, &sunRect, 0.0, CGRectMinYEdge);
     //divide up the day labels
     CGFloat originalLabelX = sunRect.origin.x;
     CGFloat labelY = sunRect.origin.y;
@@ -240,7 +240,7 @@
     
     
     // set the frames
-    [_monthLabel  setFrame:calendarTitleRect];
+    //[_monthLabel  setFrame:calendarTitleRect];
     [_sunLabel    setFrame:sunRect];
     [_monLabel    setFrame:monRect];
     [_tueLabel    setFrame:tueRect];
@@ -260,7 +260,7 @@
  **************************************************************************************************/
 - (void) setCalendar:(int)monthFirstDay numDays:(int)numDays daysCompleted:(NSMutableArray*)daysCompleted andMonthString:(NSString*)monthString
 {
-    _monthLabel.text = monthString;
+    //_monthLabel.text = monthString;
     
     for (int i = 0; i < _numCalendarButtons + monthFirstDay; i++)
     {

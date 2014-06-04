@@ -68,6 +68,11 @@
 		CA4AECCF18AAE1F20074494F /* SVProgressHUD.bundle in Resources */ = {isa = PBXBuildFile; fileRef = CA4AECCC18AAE1F20074494F /* SVProgressHUD.bundle */; };
 		CA4AECD018AAE1F20074494F /* SVProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = CA4AECCE18AAE1F20074494F /* SVProgressHUD.m */; };
 		CA4AECD218AAE22B0074494F /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CA4AECD118AAE22B0074494F /* QuartzCore.framework */; };
+		CA897C02193ECDA300A2D101 /* teams-notactivered.png in Resources */ = {isa = PBXBuildFile; fileRef = CA897C01193ECDA300A2D101 /* teams-notactivered.png */; };
+		CA897C04193ECDA900A2D101 /* teams-notactiveyellow.png in Resources */ = {isa = PBXBuildFile; fileRef = CA897C03193ECDA900A2D101 /* teams-notactiveyellow.png */; };
+		CA897C06193ECDAF00A2D101 /* teams-notactivegreen.png in Resources */ = {isa = PBXBuildFile; fileRef = CA897C05193ECDAF00A2D101 /* teams-notactivegreen.png */; };
+		CA897C08193ECDBE00A2D101 /* donebutton.png in Resources */ = {isa = PBXBuildFile; fileRef = CA897C07193ECDBE00A2D101 /* donebutton.png */; };
+		CA897C0A193EDC3800A2D101 /* calendargradient.png in Resources */ = {isa = PBXBuildFile; fileRef = CA897C09193EDC3800A2D101 /* calendargradient.png */; };
 		CABB80EB193C2B3F00C047E6 /* UUSesson.m in Sources */ = {isa = PBXBuildFile; fileRef = CABB80EA193C2B3F00C047E6 /* UUSesson.m */; };
 		CACAA75C18D115FA0016714B /* 01January-greennewyear.png in Resources */ = {isa = PBXBuildFile; fileRef = CACAA75B18D115FA0016714B /* 01January-greennewyear.png */; };
 		CACAA75E18D116020016714B /* 02February-reusablethinking.png in Resources */ = {isa = PBXBuildFile; fileRef = CACAA75D18D116020016714B /* 02February-reusablethinking.png */; };
@@ -210,6 +215,11 @@
 		CA4AECCD18AAE1F20074494F /* SVProgressHUD.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVProgressHUD.h; sourceTree = "<group>"; };
 		CA4AECCE18AAE1F20074494F /* SVProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVProgressHUD.m; sourceTree = "<group>"; };
 		CA4AECD118AAE22B0074494F /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		CA897C01193ECDA300A2D101 /* teams-notactivered.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "teams-notactivered.png"; sourceTree = "<group>"; };
+		CA897C03193ECDA900A2D101 /* teams-notactiveyellow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "teams-notactiveyellow.png"; sourceTree = "<group>"; };
+		CA897C05193ECDAF00A2D101 /* teams-notactivegreen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "teams-notactivegreen.png"; sourceTree = "<group>"; };
+		CA897C07193ECDBE00A2D101 /* donebutton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = donebutton.png; sourceTree = "<group>"; };
+		CA897C09193EDC3800A2D101 /* calendargradient.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = calendargradient.png; sourceTree = "<group>"; };
 		CABB80E8193C204200C047E6 /* NSStrinAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NSStrinAdditions.h; sourceTree = "<group>"; };
 		CABB80E9193C2B3F00C047E6 /* UUSesson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UUSesson.h; sourceTree = "<group>"; };
 		CABB80EA193C2B3F00C047E6 /* UUSesson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UUSesson.m; sourceTree = "<group>"; };
@@ -313,6 +323,10 @@
 				CA0FB378193538A100B97CEC /* button-topusers-individual_NOTSELECTED.png */,
 				CA0FB37A193538A700B97CEC /* button-topusers-team_SELECTED.png */,
 				CA0FB37C193538AE00B97CEC /* button-topusers-team_NOTSELECTED.png */,
+				CA897C01193ECDA300A2D101 /* teams-notactivered.png */,
+				CA897C05193ECDAF00A2D101 /* teams-notactivegreen.png */,
+				CA897C03193ECDA900A2D101 /* teams-notactiveyellow.png */,
+				CA897C07193ECDBE00A2D101 /* donebutton.png */,
 			);
 			name = TeamsImages;
 			sourceTree = "<group>";
@@ -573,6 +587,7 @@
 				CA0FB333192E3EA600B97CEC /* selectedCalendarButton.png */,
 				CA0FB335192E3EAB00B97CEC /* disabledCalendarButton.png */,
 				CA0FB337192E3EB000B97CEC /* userCompletedButton.png */,
+				CA897C09193EDC3800A2D101 /* calendargradient.png */,
 			);
 			name = MonthChallengeImages;
 			sourceTree = "<group>";
@@ -739,8 +754,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA897C04193ECDA900A2D101 /* teams-notactiveyellow.png in Resources */,
 				CAFA0EC718C55F9300D2871F /* genericUserImage.png in Resources */,
 				CA0FB32A192D191A00B97CEC /* ChallengeNum3Image.png in Resources */,
+				CA897C06193ECDAF00A2D101 /* teams-notactivegreen.png in Resources */,
 				CA0FB328192D191300B97CEC /* ChallengeNum2Image.png in Resources */,
 				CA0FB326192D184500B97CEC /* ChallengeNum1Image.png in Resources */,
 				CAD8F563192541DF00767ADE /* calendarIcon.png in Resources */,
@@ -772,6 +789,8 @@
 				CAFA0EC918C55F9A00D2871F /* genericUserImageSelected.png in Resources */,
 				CAFA0EC518AC1B4800D2871F /* twitterLargeIconPressed.png in Resources */,
 				CA4AEC8218AA885B0074494F /* InfoPlist.strings in Resources */,
+				CA897C08193ECDBE00A2D101 /* donebutton.png in Resources */,
+				CA897C02193ECDA300A2D101 /* teams-notactivered.png in Resources */,
 				CA0FB36B1934FAE500B97CEC /* inverted_triangle.png in Resources */,
 				CA16ECFF18ECBDD4006A0F22 /* greenUSplash320x480.png in Resources */,
 				CA0FB36D1935284500B97CEC /* topusers-green.png in Resources */,
@@ -801,6 +820,7 @@
 				CA0FB37F19357DB100B97CEC /* whiteline620pxwide.png in Resources */,
 				CAFA0EB218ABEDB200D2871F /* grayButton.png in Resources */,
 				CAD8F5651925452200767ADE /* checkbox_full.ico in Resources */,
+				CA897C0A193EDC3800A2D101 /* calendargradient.png in Resources */,
 				CA0FB3751935381E00B97CEC /* topusers-yellow.png in Resources */,
 				CA4AEC8A18AA885B0074494F /* Images.xcassets in Resources */,
 				CAFA0EC318AC1A7A00D2871F /* fbLargeIconPressed.png in Resources */,

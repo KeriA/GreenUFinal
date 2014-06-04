@@ -11,7 +11,8 @@
 // for ease of use and clarification - used by both controller and view, so leave in .h file
 #define teamTag 1
 #define passwordTag 2
-
+#define pointsTag 3
+#define rankTag 4
 
 // we will have the view controller handle all the events of this view
 @protocol UUProfileViewDelegate
@@ -20,6 +21,7 @@
 - (void) changeUserNameButtonWasPressed;
 - (void) changeTeamButtonWasPressed;
 - (void) changePasswordButtonWasPressed;
+- (void) takeMoreChallengesButtonWasPressed;
 @end // end protocol
 
 @interface UUProfileView : UIView
@@ -37,5 +39,7 @@
 - (void) setTextFieldDelegates:(id)delegate;
 - (void) updateUserImage: (UIImage*)newImage andSelectedImage:(UIImage*)selectedUserImage;
 - (void) updateUserPassword: (NSString*)maskedPassword;
+- (void) updateUserPoints:(int) points;
+- (void) updateUserRank:(int) rank;
 
 @end
