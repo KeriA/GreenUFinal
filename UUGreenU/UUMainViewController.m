@@ -247,7 +247,7 @@
 	{
         rowBackground = [_appConstants getMainMenuBackground:RED];
         selectionBackground = [_appConstants getMainMenuBackground:RED];
-        cellText = @"  Challenge";  //spaces move the text over a bit
+        cellText = @"  Challenges";  //spaces move the text over a bit
         //rowBackground = [UIImage imageNamed:@"challengewtext.png"];
 		//selectionBackground = [UIImage imageNamed:@"challengewtext.png"];
 	}
